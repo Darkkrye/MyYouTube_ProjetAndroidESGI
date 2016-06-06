@@ -4,8 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MainActivity">
 
-    <item android:id="@+id/add_item"
-        android:title="Add"
+    <item android:id="@+id/search_item"
+        android:title="Search"
+        android:icon="@android:drawable/ic_menu_search"
         android:orderInCategory="100"
         app:showAsAction="always"/>
 

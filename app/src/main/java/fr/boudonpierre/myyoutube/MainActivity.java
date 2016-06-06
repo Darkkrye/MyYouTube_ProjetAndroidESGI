@@ -18,8 +18,10 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 import retrofit2.Call;
@@ -30,12 +32,14 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String SPTAG = "starredVideo";
+
     private static RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
     private static RecyclerView recyclerView;
     static View.OnClickListener myOnClickListener;
     static ArrayList<Video> videos;
-    static ArrayList<Video> starredVideos;
+    static ArrayList<Video> starredVideos = new ArrayList<Video>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,9 +55,13 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        fillRecycler();
+        starredVideos = retrieveStarredVideos();
 
-
+        if (starredVideos != null) {
+            adapter = new CustomAdapter(starredVideos);
+            recyclerView.setAdapter(adapter);
+        } else
+            fillRecycler();
     }
 
 
@@ -67,8 +75,11 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View v) {
-            int selectedItemPosition = recyclerView.getChildPosition(v);
-            Toast.makeText(v.getContext(), videos.get(selectedItemPosition).getName() + " selected", Toast.LENGTH_SHORT).show();
+            Video selectedVideo = videos.get(recyclerView.getChildAdapterPosition(v));
+            Toast.makeText(v.getContext(), selectedVideo.getName() + " starred", Toast.LENGTH_SHORT).show();
+
+            starredVideos.add(selectedVideo);
+            saveStarredVideos(v.getContext());
         }
     }
 
@@ -126,18 +137,24 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
 
-    private void saveStarredVideos() {
-        SharedPreferences appSharedPrefs = PreferenceManager
-                .getDefaultSharedPreferences(this.getApplicationContext());
-        SharedPreferences.Editor prefsEditor = appSharedPrefs.edit();
+    public static void saveStarredVideos(Context context) {
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = sharedPrefs.edit();
         Gson gson = new Gson();
+
         String json = gson.toJson(starredVideos);
-        prefsEditor.putString("starredVideos", json);
-        prefsEditor.commit();
+
+        editor.putString(SPTAG, json);
+        editor.commit();
     }
 
     private ArrayList<Video> retrieveStarredVideos() {
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        Gson gson = new Gson();
+        String json = sharedPrefs.getString(SPTAG, null);
+        Type type = new TypeToken<ArrayList<Video>>() {}.getType();
+        ArrayList<Video> arrayList = gson.fromJson(json, type);
 
-        return new ArrayList<Video>();
+        return arrayList;
     }
 }
