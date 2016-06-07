@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private static RecyclerView recyclerView;
     static View.OnClickListener myOnClickListener;
     static ArrayList<Video> videos;
-    static ArrayList<Video> starredVideos = new ArrayList<Video>();
+    static ArrayList<Video> starredVideos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,11 +55,15 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        starredVideos = retrieveStarredVideos();
+        if ((starredVideos = retrieveStarredVideos()) == null) {
+            starredVideos = new ArrayList<Video>();
+        }
 
-        if (starredVideos != null) {
+        if (!starredVideos.isEmpty()) {
             adapter = new CustomAdapter(starredVideos);
             recyclerView.setAdapter(adapter);
+
+            saveStarredVideos(this, null);
         } else
             fillRecycler();
     }
@@ -79,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(v.getContext(), selectedVideo.getName() + " starred", Toast.LENGTH_SHORT).show();
 
             starredVideos.add(selectedVideo);
-            saveStarredVideos(v.getContext());
+            saveStarredVideos(v.getContext(), starredVideos);
         }
     }
 
@@ -137,12 +141,12 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
 
-    public static void saveStarredVideos(Context context) {
+    public static void saveStarredVideos(Context context, ArrayList<Video> theStarredVideos) {
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = sharedPrefs.edit();
         Gson gson = new Gson();
 
-        String json = gson.toJson(starredVideos);
+        String json = gson.toJson(theStarredVideos);
 
         editor.putString(SPTAG, json);
         editor.commit();
