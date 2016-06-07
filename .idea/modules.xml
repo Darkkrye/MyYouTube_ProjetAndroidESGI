@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/MyYouTube.iml" filepath="$PROJECT_DIR$/MyYouTube.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MyYouTube_ProjetAndroidESGI.iml" filepath="$PROJECT_DIR$/MyYouTube_ProjetAndroidESGI.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
