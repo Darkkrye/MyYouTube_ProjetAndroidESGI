@@ -44,8 +44,7 @@ public class FavoritesActivity extends AppCompatActivity {
     LinearLayout favoritesLayoutDrawer;
 
     /* Variables */
-    static View.OnClickListener myOnClickListener;
-    static ArrayList<Video> starredVideos;
+    static View.OnClickListener myOnClickListenerForFavorite;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +52,9 @@ public class FavoritesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         /* Deactivate Animation */
-        getWindow().setWindowAnimations(0);
+        if (getIntent().getBooleanExtra("fromDrawer", false)) {
+            getWindow().setWindowAnimations(0);
+        }
 
         /* -- Navigation Drawer -- */
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -82,24 +83,22 @@ public class FavoritesActivity extends AppCompatActivity {
         this.homeLayoutDrawer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(FavoritesActivity.this, "Home", Toast.LENGTH_SHORT).show();
-
                 drawerLayout.closeDrawer(Gravity.LEFT);
 
                 Intent intent = new Intent(FavoritesActivity.this, MainActivity.class);
+                intent.putExtra("fromDrawer", true);
                 startActivity(intent);
             }
         });
         this.favoritesLayoutDrawer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "Favoris", Toast.LENGTH_SHORT).show();
                 drawerLayout.closeDrawer(Gravity.LEFT);
             }
         });
 
 
-        myOnClickListener = new MyOnClickListener(this);
+        myOnClickListenerForFavorite = new MyOnClickListenerForFavorite(this);
 
         recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
         recyclerView.setHasFixedSize(true);
@@ -108,30 +107,31 @@ public class FavoritesActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-
-        if ((starredVideos = retrieveStarredVideos()) == null) {
-            starredVideos = new ArrayList<Video>();
-        }
-
-        if (!starredVideos.isEmpty()) {
-            adapter = new CustomAdapter(starredVideos);
+        if (MyVariables.starredVideos != null && !MyVariables.starredVideos.isEmpty()) {
+            adapter = new CustomAdapter(MyVariables.starredVideos, this);
             recyclerView.setAdapter(adapter);
         } else {
             Toast.makeText(this, "Aucun favoris n'a été ajouté", Toast.LENGTH_SHORT).show();
         }
     }
 
-    private static class MyOnClickListener implements View.OnClickListener {
+    private static class MyOnClickListenerForFavorite implements View.OnClickListener {
 
         private final Context context;
 
-        private MyOnClickListener(Context context) {
+        private MyOnClickListenerForFavorite(Context context) {
             this.context = context;
         }
 
         @Override
         public void onClick(View v) {
+            Video selectedVideo = MyVariables.starredVideos.get(recyclerView.getChildAdapterPosition(v));
+            //Toast.makeText(v.getContext(), selectedVideo.getName() + " starred", Toast.LENGTH_SHORT).show();
 
+            MyVariables.currentVideo = selectedVideo;
+
+            Intent i = new Intent(v.getContext(), DetailsActivity.class);
+            v.getContext().startActivity(i);
         }
     }
 
@@ -158,15 +158,5 @@ public class FavoritesActivity extends AppCompatActivity {
         // Handle your other action bar items...
 
         return super.onOptionsItemSelected(item);
-    }
-
-    private ArrayList<Video> retrieveStarredVideos() {
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        Gson gson = new Gson();
-        String json = sharedPrefs.getString(MainActivity.SPTAG, null);
-        Type type = new TypeToken<ArrayList<Video>>() {}.getType();
-        ArrayList<Video> arrayList = gson.fromJson(json, type);
-
-        return arrayList;
     }
 }

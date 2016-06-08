@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">MyYouTube</string>
+    <string name="lipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec eu auctor est. Vestibulum ipsum ipsum, laoreet ornare justo in, blandit faucibus tellus. Sed ac risus volutpat, posuere augue sed, fermentum lectus.</string>
 </resources>

@@ -48,9 +48,6 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
-
-    public static final String SPTAG = "starredVideo";
-
     /* Binded Views */
     private static RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
@@ -66,9 +63,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     /* Variables */
-    static View.OnClickListener myOnClickListener;
-    static ArrayList<Video> videos;
-    static ArrayList<Video> starredVideos = new ArrayList<Video>();
+    static View.OnClickListener myOnClickListenerForMain;
+    //RecyclerView.ItemAnimator itemAnimator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +72,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         /* Deactivate Animation */
-        getWindow().setWindowAnimations(0);
+        if (getIntent().getBooleanExtra("fromDrawer", false)) {
+            getWindow().setWindowAnimations(0);
+        }
 
         /* -- Navigation Drawer -- */
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -105,24 +103,22 @@ public class MainActivity extends AppCompatActivity {
         this.homeLayoutDrawer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "Home", Toast.LENGTH_SHORT).show();
                 drawerLayout.closeDrawer(Gravity.LEFT);
             }
         });
         this.favoritesLayoutDrawer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "Favoris", Toast.LENGTH_SHORT).show();
-
                 drawerLayout.closeDrawer(Gravity.LEFT);
 
                 Intent intent = new Intent(MainActivity.this, FavoritesActivity.class);
+                intent.putExtra("fromDrawer", true);
                 startActivity(intent);
             }
         });
 
 
-        myOnClickListener = new MyOnClickListener(this);
+        myOnClickListenerForMain = new MyOnClickListenerForMain(this);
 
         recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
         recyclerView.setHasFixedSize(true);
@@ -132,24 +128,36 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
         fillRecycler();
+
+        /* Reload favorites */
+        MyVariables.retrieveStarredVideos(this);
+
+        /* Not as handsome
+        // Animation
+        this.itemAnimator = new DefaultItemAnimator();
+        this.itemAnimator.setAddDuration(1000);
+        this.itemAnimator.setRemoveDuration(1000);
+
+        this.recyclerView.setItemAnimator(this.itemAnimator);*/
     }
 
 
-    private static class MyOnClickListener implements View.OnClickListener {
+    private static class MyOnClickListenerForMain implements View.OnClickListener {
 
         private final Context context;
 
-        private MyOnClickListener(Context context) {
+        private MyOnClickListenerForMain(Context context) {
             this.context = context;
         }
 
         @Override
         public void onClick(View v) {
-            Video selectedVideo = videos.get(recyclerView.getChildAdapterPosition(v));
-            Toast.makeText(v.getContext(), selectedVideo.getName() + " starred", Toast.LENGTH_SHORT).show();
+            Video selectedVideo = MyVariables.videos.get(recyclerView.getChildAdapterPosition(v));
 
-            starredVideos.add(selectedVideo);
-            saveStarredVideos(v.getContext(), starredVideos);
+            MyVariables.currentVideo = selectedVideo;
+
+            Intent i = new Intent(v.getContext(), DetailsActivity.class);
+            v.getContext().startActivity(i);
         }
     }
 
@@ -204,14 +212,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<ArrayList<Video>> call, Throwable t) {
                 showError(String.valueOf(t));
+                showError("Un problème est survenu. Vérifiez votre connexion internet");
             }
         });
     }
 
     private void showVideos(ArrayList<Video> videos, int statusCode) {
-        this.videos = videos;
+        MyVariables.videos = videos;
         // Fill with data
-        adapter = new CustomAdapter(videos);
+        adapter = new CustomAdapter(videos, this);
         recyclerView.setAdapter(adapter);
     }
 
@@ -219,14 +228,5 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
 
-    public static void saveStarredVideos(Context context, ArrayList<Video> theStarredVideos) {
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.Editor editor = sharedPrefs.edit();
-        Gson gson = new Gson();
 
-        String json = gson.toJson(theStarredVideos);
-
-        editor.putString(SPTAG, json);
-        editor.commit();
-    }
 }
