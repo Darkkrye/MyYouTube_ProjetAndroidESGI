@@ -1,16 +1,10 @@
 package fr.boudonpierre.myyoutube;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
-import android.os.Debug;
 import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -21,35 +15,20 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Gravity;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
-import de.hdodenhof.circleimageview.CircleImageView;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-
-public class MainActivity extends AppCompatActivity {
-
-    public static final String SPTAG = "starredVideo";
+public class FavoritesActivity extends AppCompatActivity {
 
     /* Binded Views */
     private static RecyclerView.Adapter adapter;
@@ -64,11 +43,9 @@ public class MainActivity extends AppCompatActivity {
     LinearLayout homeLayoutDrawer;
     LinearLayout favoritesLayoutDrawer;
 
-
     /* Variables */
     static View.OnClickListener myOnClickListener;
-    static ArrayList<Video> videos;
-    static ArrayList<Video> starredVideos = new ArrayList<Video>();
+    static ArrayList<Video> starredVideos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,8 +69,8 @@ public class MainActivity extends AppCompatActivity {
         this.favoritesLayoutDrawer = (LinearLayout) findViewById(R.id.favoritesLayout);
 
         /* -- Navigation Drawer - Set Properties -- */
-        this.homeLayoutDrawer.setBackgroundColor(ContextCompat.getColor(this, R.color.grey_300));
-        this.favoritesLayoutDrawer.setBackgroundColor(Color.TRANSPARENT);
+        this.favoritesLayoutDrawer.setBackgroundColor(ContextCompat.getColor(this, R.color.grey_300));
+        this.homeLayoutDrawer.setBackgroundColor(Color.TRANSPARENT);
 
         /* -- Navigation Drawer - OnClickListeners -- */
         this.headerLayoutDrawer.setOnClickListener(new View.OnClickListener() {
@@ -105,19 +82,19 @@ public class MainActivity extends AppCompatActivity {
         this.homeLayoutDrawer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "Home", Toast.LENGTH_SHORT).show();
+                Toast.makeText(FavoritesActivity.this, "Home", Toast.LENGTH_SHORT).show();
+
                 drawerLayout.closeDrawer(Gravity.LEFT);
+
+                Intent intent = new Intent(FavoritesActivity.this, MainActivity.class);
+                startActivity(intent);
             }
         });
         this.favoritesLayoutDrawer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "Favoris", Toast.LENGTH_SHORT).show();
-
+                Toast.makeText(getApplicationContext(), "Favoris", Toast.LENGTH_SHORT).show();
                 drawerLayout.closeDrawer(Gravity.LEFT);
-
-                Intent intent = new Intent(MainActivity.this, FavoritesActivity.class);
-                startActivity(intent);
             }
         });
 
@@ -131,9 +108,18 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        fillRecycler();
-    }
 
+        if ((starredVideos = retrieveStarredVideos()) == null) {
+            starredVideos = new ArrayList<Video>();
+        }
+
+        if (!starredVideos.isEmpty()) {
+            adapter = new CustomAdapter(starredVideos);
+            recyclerView.setAdapter(adapter);
+        } else {
+            Toast.makeText(this, "Aucun favoris n'a été ajouté", Toast.LENGTH_SHORT).show();
+        }
+    }
 
     private static class MyOnClickListener implements View.OnClickListener {
 
@@ -145,14 +131,9 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View v) {
-            Video selectedVideo = videos.get(recyclerView.getChildAdapterPosition(v));
-            Toast.makeText(v.getContext(), selectedVideo.getName() + " starred", Toast.LENGTH_SHORT).show();
 
-            starredVideos.add(selectedVideo);
-            saveStarredVideos(v.getContext(), starredVideos);
         }
     }
-
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -179,54 +160,13 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void fillRecycler() {
-        // Retrofit Builder
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(YouTubeService.ENDPOINT)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        YouTubeService apiService = retrofit.create(YouTubeService.class);
-
-        Call<ArrayList<Video>> call = apiService.getVideos();
-        call.enqueue(new Callback<ArrayList<Video>>() {
-            @Override
-            public void onResponse(Call<ArrayList<Video>> call, Response<ArrayList<Video>> response) {
-                int statusCode = response.code();
-                ArrayList<Video> videos = response.body();
-
-                if (videos != null)
-                    showVideos(videos, statusCode);
-                else
-                    showError("There's no videos !");
-            }
-
-            @Override
-            public void onFailure(Call<ArrayList<Video>> call, Throwable t) {
-                showError(String.valueOf(t));
-            }
-        });
-    }
-
-    private void showVideos(ArrayList<Video> videos, int statusCode) {
-        this.videos = videos;
-        // Fill with data
-        adapter = new CustomAdapter(videos);
-        recyclerView.setAdapter(adapter);
-    }
-
-    private void showError(String message) {
-        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
-    }
-
-    public static void saveStarredVideos(Context context, ArrayList<Video> theStarredVideos) {
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.Editor editor = sharedPrefs.edit();
+    private ArrayList<Video> retrieveStarredVideos() {
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         Gson gson = new Gson();
+        String json = sharedPrefs.getString(MainActivity.SPTAG, null);
+        Type type = new TypeToken<ArrayList<Video>>() {}.getType();
+        ArrayList<Video> arrayList = gson.fromJson(json, type);
 
-        String json = gson.toJson(theStarredVideos);
-
-        editor.putString(SPTAG, json);
-        editor.commit();
+        return arrayList;
     }
 }
