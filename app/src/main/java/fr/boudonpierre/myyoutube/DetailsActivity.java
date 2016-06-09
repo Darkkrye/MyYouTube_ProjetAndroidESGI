@@ -30,7 +30,6 @@ public class DetailsActivity extends AppCompatActivity {
 
     @BindView(R.id.layoutFavoriteButton) LinearLayout layoutFavoriteButton;
     @BindView(R.id.layoutViewVideoButton) LinearLayout layoutViewVideoButton;
-    @BindView(R.id.shareLayout) LinearLayout shareLayout;
 
     @BindView(R.id.imageStar) ImageView imageStar;
     @BindView(R.id.textStar) TextView textStar;
@@ -110,8 +109,8 @@ public class DetailsActivity extends AppCompatActivity {
         Intent browse = new Intent(Intent.ACTION_VIEW, Uri.parse(video.getVideoUrl()));
         startActivity(browse);
     }
-    @OnClick(R.id.shareLayout)
-    public void onShareLayoutClick() {
+    @OnClick(R.id.shareFAB)
+    public void onShareFABClick() {
         Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
         sharingIntent.setType("text/plain");
 
