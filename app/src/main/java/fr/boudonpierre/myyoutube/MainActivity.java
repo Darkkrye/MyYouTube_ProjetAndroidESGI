@@ -40,6 +40,8 @@ import com.squareup.picasso.Target;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -49,24 +51,25 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
     /* Binded Views */
+    @BindView(R.id.drawer) DrawerLayout drawerLayout;
+    @BindView(R.id.toolbar) Toolbar toolbar;
+
+    @BindView(R.id.headerLayout) RelativeLayout headerLayoutDrawer;
+    @BindView(R.id.homeLayout) LinearLayout homeLayoutDrawer;
+    @BindView(R.id.favoritesLayout) LinearLayout favoritesLayoutDrawer;
+
+    @BindView(R.id.profile_image) CircleImageView profileImage;
+    @BindView(R.id.username) TextView tvusername;
+    @BindView(R.id.email) TextView tvemail;
+
+
+    /* Variables */
     private static RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
     private static RecyclerView recyclerView;
 
-    DrawerLayout drawerLayout;
-    Toolbar toolbar;
     ActionBarDrawerToggle drawerToggle;
 
-    RelativeLayout headerLayoutDrawer;
-    LinearLayout homeLayoutDrawer;
-    LinearLayout favoritesLayoutDrawer;
-
-    CircleImageView profileImage;
-    TextView tvusername;
-    TextView tvemail;
-
-
-    /* Variables */
     static View.OnClickListener myOnClickListenerForMain;
     //RecyclerView.ItemAnimator itemAnimator;
 
@@ -84,21 +87,15 @@ public class MainActivity extends AppCompatActivity {
         MyVariables.retrieveStarredVideos(this);
         MyVariables.retrieveCurrentUser(this);
 
+        /* -- Get Binded Views -- */
+        ButterKnife.bind(this);
+
         /* -- Navigation Drawer -- */
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
         drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, 0, 0);
         drawerLayout.addDrawerListener(drawerToggle);
-
-        this.headerLayoutDrawer = (RelativeLayout) findViewById(R.id.headerLayout);
-        this.homeLayoutDrawer = (LinearLayout) findViewById(R.id.homeLayout);
-        this.favoritesLayoutDrawer = (LinearLayout) findViewById(R.id.favoritesLayout);
-        this.profileImage = (CircleImageView) findViewById(R.id.profile_image);
-        this.tvusername = (TextView) findViewById(R.id.username);
-        this.tvemail = (TextView) findViewById(R.id.email);
 
         /* -- Navigation Drawer - Set Properties -- */
         this.homeLayoutDrawer.setBackgroundColor(ContextCompat.getColor(this, R.color.grey_300));
