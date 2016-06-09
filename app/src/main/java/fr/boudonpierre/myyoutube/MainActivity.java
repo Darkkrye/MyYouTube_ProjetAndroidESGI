@@ -43,6 +43,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -107,42 +108,6 @@ public class MainActivity extends AppCompatActivity {
         this.favoritesLayoutDrawer.setBackgroundColor(Color.TRANSPARENT);
         this.updateNavigationDrawerUI();
 
-        /* -- Navigation Drawer - OnClickListeners -- */
-        this.headerLayoutDrawer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Toast.makeText(getApplicationContext(), "New user", Toast.LENGTH_SHORT).show();
-
-                /* Change current user and save it */
-                if (MyVariables.currentUser == MyVariables.usernames.length - 1) {
-                    MyVariables.currentUser = 0;
-                } else {
-                    MyVariables.currentUser += 1;
-                }
-                MyVariables.saveCurrentUser(getApplicationContext());
-
-                /* Update UI */
-                updateNavigationDrawerUI();
-            }
-        });
-        this.homeLayoutDrawer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                drawerLayout.closeDrawer(Gravity.LEFT);
-            }
-        });
-        this.favoritesLayoutDrawer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                drawerLayout.closeDrawer(Gravity.LEFT);
-
-                Intent intent = new Intent(MainActivity.this, FavoritesActivity.class);
-                intent.putExtra("fromDrawer", true);
-                startActivity(intent);
-            }
-        });
-
-
         myOnClickListenerForMain = new MyOnClickListenerForMain(this);
 
         recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
@@ -152,7 +117,11 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        fillRecycler(YouTubeService.ENDPOINT, false);
+        if (isReloaded)
+            fillRecycler(YouTubeService.ENDPOINT2, true);
+        else
+            fillRecycler(YouTubeService.ENDPOINT, false);
+
 
         /* Not as handsome
         // Animation
@@ -303,5 +272,32 @@ public class MainActivity extends AppCompatActivity {
                         // use placeholder drawable if desired
                     }
                 });
+    }
+
+    /* -- Navigation Drawer - OnClickListeners -- */
+    @OnClick(R.id.headerLayout)
+    public void onHeaderLayoutDrawerClick() {
+        /* Change current user and save it */
+        if (MyVariables.currentUser == MyVariables.usernames.length - 1) {
+            MyVariables.currentUser = 0;
+        } else {
+            MyVariables.currentUser += 1;
+        }
+        MyVariables.saveCurrentUser(getApplicationContext());
+
+                /* Update UI */
+        updateNavigationDrawerUI();
+    }
+    @OnClick(R.id.homeLayout)
+    public void onHomeLayoutDrawerClick() {
+        drawerLayout.closeDrawer(Gravity.LEFT);
+    }
+    @OnClick(R.id.favoritesLayout)
+    public void onFavoriteLayoutClick() {
+        drawerLayout.closeDrawer(Gravity.LEFT);
+
+        Intent intent = new Intent(MainActivity.this, FavoritesActivity.class);
+        intent.putExtra("fromDrawer", true);
+        startActivity(intent);
     }
 }

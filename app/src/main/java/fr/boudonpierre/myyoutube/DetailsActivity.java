@@ -17,20 +17,26 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 public class DetailsActivity extends AppCompatActivity {
 
     /* Binded View */
-    ImageView detailsImage;
-    TextView videoName;
-    TextView videoDescription;
-    LinearLayout layoutFavoriteButton;
-    LinearLayout layoutViewVideoButton;
+    @BindView(R.id.detailsImage) ImageView detailsImage;
+    @BindView(R.id.videoName) TextView videoName;
+    @BindView(R.id.videoDescription) TextView videoDescription;
 
-    ImageView imageStar;
-    TextView textStar;
+    @BindView(R.id.layoutFavoriteButton) LinearLayout layoutFavoriteButton;
+    @BindView(R.id.layoutViewVideoButton) LinearLayout layoutViewVideoButton;
+    @BindView(R.id.shareLayout) LinearLayout shareLayout;
+
+    @BindView(R.id.imageStar) ImageView imageStar;
+    @BindView(R.id.textStar) TextView textStar;
 
     /* Variables */
-    Toolbar toolbar;
+    @BindView(R.id.toolbar) Toolbar toolbar;
     Video video = MyVariables.currentVideo;
 
     @Override
@@ -38,20 +44,12 @@ public class DetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
 
+        /* Bind View */
+        ButterKnife.bind(this);
+
         /* -- Navigation Drawer -- */
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        /* Bind View */
-        this.detailsImage = (ImageView) findViewById(R.id.detailsImage);
-        this.videoName = (TextView) findViewById(R.id.videoName);
-        this.videoDescription = (TextView) findViewById(R.id.videoDescription);
-        this.layoutFavoriteButton = (LinearLayout) findViewById(R.id.layoutFavoriteButton);
-        this.layoutViewVideoButton = (LinearLayout) findViewById(R.id.layoutViewVideoButton);
-
-        this.imageStar = (ImageView) findViewById(R.id.imageStar);
-        this.textStar = (TextView) findViewById(R.id.textStar);
 
         /* Get Screen Width */
         DisplayMetrics displaymetrics = new DisplayMetrics();
@@ -73,48 +71,56 @@ public class DetailsActivity extends AppCompatActivity {
                 break;
             }
         }
+    }
 
-        /* Set On Click Listeners */
-        this.layoutFavoriteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Boolean isAlreadyStarred = false;
-                int index = 0;
+    /* Set On Click Listeners */
+    @OnClick(R.id.layoutFavoriteButton)
+    public void onLayoutFavoriteButtonClick() {
+        Boolean isAlreadyStarred = false;
+        int index = 0;
 
-                for (int i = 0; i < MyVariables.starredVideos.size(); i++) {
-                    if (video.getId().equals(MyVariables.starredVideos.get(i).getId())) {
-                        isAlreadyStarred = true;
-                        index = i;
-                        break;
-                    }
-                }
-
-                if (!isAlreadyStarred) {
-                    MyVariables.starredVideos.add(video);
-                    MyVariables.saveStarredVideos(getApplicationContext());
-
-                    Toast.makeText(getApplicationContext(), "Ajouté aux favoris", Toast.LENGTH_SHORT).show();
-
-                    imageStar.setImageResource(R.drawable.star);
-                    textStar.setText("Supprimer des favoris");
-                } else {
-                    MyVariables.starredVideos.remove(index);
-                    MyVariables.saveStarredVideos(getApplicationContext());
-
-                    Toast.makeText(getApplicationContext(), "Favoris supprimé", Toast.LENGTH_SHORT).show();
-
-                    imageStar.setImageResource(R.drawable.empty_star);
-                    textStar.setText("Ajouter aux favoris");
-                }
+        for (int i = 0; i < MyVariables.starredVideos.size(); i++) {
+            if (video.getId().equals(MyVariables.starredVideos.get(i).getId())) {
+                isAlreadyStarred = true;
+                index = i;
+                break;
             }
-        });
-        this.layoutViewVideoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent browse = new Intent(Intent.ACTION_VIEW, Uri.parse(video.getVideoUrl()));
-                startActivity(browse);
-            }
-        });
+        }
+
+        if (!isAlreadyStarred) {
+            MyVariables.starredVideos.add(video);
+            MyVariables.saveStarredVideos(getApplicationContext());
+
+            Toast.makeText(getApplicationContext(), "Ajouté aux favoris", Toast.LENGTH_SHORT).show();
+
+            imageStar.setImageResource(R.drawable.star);
+            textStar.setText("Supprimer des favoris");
+        } else {
+            MyVariables.starredVideos.remove(index);
+            MyVariables.saveStarredVideos(getApplicationContext());
+
+            Toast.makeText(getApplicationContext(), "Favoris supprimé", Toast.LENGTH_SHORT).show();
+
+            imageStar.setImageResource(R.drawable.empty_star);
+            textStar.setText("Ajouter aux favoris");
+        }
+    }
+    @OnClick(R.id.layoutViewVideoButton)
+    public void onLayoutViewVideoButtonClick() {
+        Intent browse = new Intent(Intent.ACTION_VIEW, Uri.parse(video.getVideoUrl()));
+        startActivity(browse);
+    }
+    @OnClick(R.id.shareLayout)
+    public void onShareLayoutClick() {
+        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+
+        String shareBody = "Regardez cette super video : \n" + video.getVideoUrl();
+
+        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Partagez cette vidéo");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+
+        startActivity(Intent.createChooser(sharingIntent, "Partager cette vidéo via"));
     }
 
     @Override

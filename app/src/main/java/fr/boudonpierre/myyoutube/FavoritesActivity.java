@@ -38,6 +38,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class FavoritesActivity extends AppCompatActivity {
@@ -90,42 +91,6 @@ public class FavoritesActivity extends AppCompatActivity {
         this.favoritesLayoutDrawer.setBackgroundColor(ContextCompat.getColor(this, R.color.grey_300));
         this.homeLayoutDrawer.setBackgroundColor(Color.TRANSPARENT);
         this.updateNavigationDrawerUI();
-
-        /* -- Navigation Drawer - OnClickListeners -- */
-        this.headerLayoutDrawer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Toast.makeText(getApplicationContext(), "New user", Toast.LENGTH_SHORT).show();
-
-                /* Change current user and save it */
-                if (MyVariables.currentUser == MyVariables.usernames.length - 1) {
-                    MyVariables.currentUser = 0;
-                } else {
-                    MyVariables.currentUser += 1;
-                }
-                MyVariables.saveCurrentUser(getApplicationContext());
-
-                /* Update UI */
-                updateNavigationDrawerUI();
-            }
-        });
-        this.homeLayoutDrawer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                drawerLayout.closeDrawer(Gravity.LEFT);
-
-                Intent intent = new Intent(FavoritesActivity.this, MainActivity.class);
-                intent.putExtra("fromDrawer", true);
-                startActivity(intent);
-            }
-        });
-        this.favoritesLayoutDrawer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                drawerLayout.closeDrawer(Gravity.LEFT);
-            }
-        });
-
 
         myOnClickListenerForFavorite = new MyOnClickListenerForFavorite(this);
 
@@ -234,5 +199,32 @@ public class FavoritesActivity extends AppCompatActivity {
                         // use placeholder drawable if desired
                     }
                 });
+    }
+
+    /* -- Navigation Drawer - OnClickListeners -- */
+    @OnClick(R.id.headerLayout)
+    public void onHeaderLayoutDrawerClick() {
+        /* Change current user and save it */
+        if (MyVariables.currentUser == MyVariables.usernames.length - 1) {
+            MyVariables.currentUser = 0;
+        } else {
+            MyVariables.currentUser += 1;
+        }
+        MyVariables.saveCurrentUser(getApplicationContext());
+
+                /* Update UI */
+        updateNavigationDrawerUI();
+    }
+    @OnClick(R.id.homeLayout)
+    public void onHomeLayoutDrawerClick() {
+        drawerLayout.closeDrawer(Gravity.LEFT);
+
+        Intent intent = new Intent(FavoritesActivity.this, MainActivity.class);
+        intent.putExtra("fromDrawer", true);
+        startActivity(intent);
+    }
+    @OnClick(R.id.favoritesLayout)
+    public void onFavoriteLayoutClick() {
+        drawerLayout.closeDrawer(Gravity.LEFT);
     }
 }
