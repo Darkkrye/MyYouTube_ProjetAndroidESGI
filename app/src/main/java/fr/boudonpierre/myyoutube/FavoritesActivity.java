@@ -1,10 +1,14 @@
 package fr.boudonpierre.myyoutube;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -20,13 +24,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class FavoritesActivity extends AppCompatActivity {
 
@@ -42,6 +51,10 @@ public class FavoritesActivity extends AppCompatActivity {
     RelativeLayout headerLayoutDrawer;
     LinearLayout homeLayoutDrawer;
     LinearLayout favoritesLayoutDrawer;
+
+    CircleImageView profileImage;
+    TextView tvusername;
+    TextView tvemail;
 
     /* Variables */
     static View.OnClickListener myOnClickListenerForFavorite;
@@ -69,15 +82,31 @@ public class FavoritesActivity extends AppCompatActivity {
         this.homeLayoutDrawer = (LinearLayout) findViewById(R.id.homeLayout);
         this.favoritesLayoutDrawer = (LinearLayout) findViewById(R.id.favoritesLayout);
 
+        this.profileImage = (CircleImageView) findViewById(R.id.profile_image);
+        this.tvusername = (TextView) findViewById(R.id.username);
+        this.tvemail = (TextView) findViewById(R.id.email);
+
         /* -- Navigation Drawer - Set Properties -- */
         this.favoritesLayoutDrawer.setBackgroundColor(ContextCompat.getColor(this, R.color.grey_300));
         this.homeLayoutDrawer.setBackgroundColor(Color.TRANSPARENT);
+        this.updateNavigationDrawerUI();
 
         /* -- Navigation Drawer - OnClickListeners -- */
         this.headerLayoutDrawer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "Change user", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "New user", Toast.LENGTH_SHORT).show();
+
+                /* Change current user and save it */
+                if (MyVariables.currentUser == MyVariables.usernames.length - 1) {
+                    MyVariables.currentUser = 0;
+                } else {
+                    MyVariables.currentUser += 1;
+                }
+                MyVariables.saveCurrentUser(getApplicationContext());
+
+                /* Update UI */
+                updateNavigationDrawerUI();
             }
         });
         this.homeLayoutDrawer.setOnClickListener(new View.OnClickListener() {
@@ -158,5 +187,36 @@ public class FavoritesActivity extends AppCompatActivity {
         // Handle your other action bar items...
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void updateNavigationDrawerUI() {
+        tvusername.setText(MyVariables.usernames[MyVariables.currentUser]);
+        tvemail.setText(MyVariables.emails[MyVariables.currentUser]);
+        Picasso.with(getApplicationContext()).load(MyVariables.profileImages[MyVariables.currentUser]).into(profileImage);
+        Picasso.with(getApplicationContext())
+                .load(MyVariables.backgroundImages[MyVariables.currentUser])
+                .into(new Target() {
+                    @Override
+                    @TargetApi(16)
+                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                        int sdk = android.os.Build.VERSION.SDK_INT;
+                        if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                            headerLayoutDrawer.setBackgroundDrawable(new BitmapDrawable(bitmap));
+                        } else {
+                            headerLayoutDrawer.setBackground(new BitmapDrawable(getResources(), bitmap));
+                        }
+                    }
+
+                    @Override
+                    public void onBitmapFailed(Drawable errorDrawable) {
+                        // use error drawable if desired
+                        Toast.makeText(getApplicationContext(), String.valueOf(errorDrawable), Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onPrepareLoad(Drawable placeHolderDrawable) {
+                        // use placeholder drawable if desired
+                    }
+                });
     }
 }

@@ -15,9 +15,15 @@ import java.util.ArrayList;
  */
 public class MyVariables {
     public static final String SPTAG = "starredVideo";
+    public static final String[] usernames = {"Dexter MORGAN", "Odile DERAY", "Brenda MONTGOMERY", "Knights Who Say NI !"};
+    public static final String[] emails = {"dexmorgan@ClickOn.me", "oderay@ClickOn.me", "bbbbrendaaa@ClickOn.me", "shrubbery@ClickOn.me"};
+    public static final int[] profileImages = {R.drawable.t_profile, R.drawable.oderay, R.drawable.bmontgomery, R.drawable.ni};
+    public static final int[] backgroundImages = {R.drawable.t_background_poly, R.drawable.background1, R.drawable.background2, R.drawable.background3};
+
     public static ArrayList<Video> videos;
     public static ArrayList<Video> starredVideos;
     public static Video currentVideo;
+    public static int currentUser;
 
     public static void saveStarredVideos(Context context) {
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -40,5 +46,18 @@ public class MyVariables {
         if (MyVariables.starredVideos == null) {
             MyVariables.starredVideos = new ArrayList<Video>();
         }
+    }
+
+    public static void saveCurrentUser(Context context) {
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = sharedPrefs.edit();
+
+        editor.putInt("currentUser", MyVariables.currentUser);
+        editor.commit();
+    }
+
+    public static void retrieveCurrentUser(Context context) {
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+        MyVariables.currentUser = sharedPrefs.getInt("currentUser", 0);
     }
 }

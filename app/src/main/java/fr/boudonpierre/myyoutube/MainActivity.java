@@ -61,6 +61,10 @@ public class MainActivity extends AppCompatActivity {
     LinearLayout homeLayoutDrawer;
     LinearLayout favoritesLayoutDrawer;
 
+    CircleImageView profileImage;
+    TextView tvusername;
+    TextView tvemail;
+
 
     /* Variables */
     static View.OnClickListener myOnClickListenerForMain;
@@ -76,6 +80,10 @@ public class MainActivity extends AppCompatActivity {
             getWindow().setWindowAnimations(0);
         }
 
+        /* Reload Shared Preferences */
+        MyVariables.retrieveStarredVideos(this);
+        MyVariables.retrieveCurrentUser(this);
+
         /* -- Navigation Drawer -- */
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -88,16 +96,31 @@ public class MainActivity extends AppCompatActivity {
         this.headerLayoutDrawer = (RelativeLayout) findViewById(R.id.headerLayout);
         this.homeLayoutDrawer = (LinearLayout) findViewById(R.id.homeLayout);
         this.favoritesLayoutDrawer = (LinearLayout) findViewById(R.id.favoritesLayout);
+        this.profileImage = (CircleImageView) findViewById(R.id.profile_image);
+        this.tvusername = (TextView) findViewById(R.id.username);
+        this.tvemail = (TextView) findViewById(R.id.email);
 
         /* -- Navigation Drawer - Set Properties -- */
         this.homeLayoutDrawer.setBackgroundColor(ContextCompat.getColor(this, R.color.grey_300));
         this.favoritesLayoutDrawer.setBackgroundColor(Color.TRANSPARENT);
+        this.updateNavigationDrawerUI();
 
         /* -- Navigation Drawer - OnClickListeners -- */
         this.headerLayoutDrawer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "Change user", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "New user", Toast.LENGTH_SHORT).show();
+
+                /* Change current user and save it */
+                if (MyVariables.currentUser == MyVariables.usernames.length - 1) {
+                    MyVariables.currentUser = 0;
+                } else {
+                    MyVariables.currentUser += 1;
+                }
+                MyVariables.saveCurrentUser(getApplicationContext());
+
+                /* Update UI */
+                updateNavigationDrawerUI();
             }
         });
         this.homeLayoutDrawer.setOnClickListener(new View.OnClickListener() {
@@ -128,9 +151,6 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
         fillRecycler();
-
-        /* Reload favorites */
-        MyVariables.retrieveStarredVideos(this);
 
         /* Not as handsome
         // Animation
@@ -228,5 +248,34 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
 
+    private void updateNavigationDrawerUI() {
+        tvusername.setText(MyVariables.usernames[MyVariables.currentUser]);
+        tvemail.setText(MyVariables.emails[MyVariables.currentUser]);
+        Picasso.with(getApplicationContext()).load(MyVariables.profileImages[MyVariables.currentUser]).into(profileImage);
+        Picasso.with(getApplicationContext())
+                .load(MyVariables.backgroundImages[MyVariables.currentUser])
+                .into(new Target() {
+                    @Override
+                    @TargetApi(16)
+                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                        int sdk = android.os.Build.VERSION.SDK_INT;
+                        if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                            headerLayoutDrawer.setBackgroundDrawable(new BitmapDrawable(bitmap));
+                        } else {
+                            headerLayoutDrawer.setBackground(new BitmapDrawable(getResources(), bitmap));
+                        }
+                    }
 
+                    @Override
+                    public void onBitmapFailed(Drawable errorDrawable) {
+                        // use error drawable if desired
+                        Toast.makeText(getApplicationContext(), String.valueOf(errorDrawable), Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onPrepareLoad(Drawable placeHolderDrawable) {
+                        // use placeholder drawable if desired
+                    }
+                });
+    }
 }
