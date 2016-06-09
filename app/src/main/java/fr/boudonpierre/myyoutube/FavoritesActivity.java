@@ -131,11 +131,19 @@ public class FavoritesActivity extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
 
         if (MyVariables.starredVideos != null && !MyVariables.starredVideos.isEmpty()) {
+            recyclerView.setVisibility(View.VISIBLE);
             adapter = new CustomAdapter(MyVariables.starredVideos, this);
             recyclerView.setAdapter(adapter);
         } else {
+            // Force RecyclerView to show nothing when remove last favorites from FavoriteActivity>DetailsActivity
+            recyclerView.setVisibility(View.GONE);
             Toast.makeText(this, "Aucun favoris n'a été ajouté", Toast.LENGTH_SHORT).show();
         }
     }
