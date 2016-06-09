@@ -12,6 +12,7 @@ import android.graphics.drawable.Drawable;
 import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -52,6 +53,9 @@ public class FavoritesActivity extends AppCompatActivity {
     @BindView(R.id.profile_image) CircleImageView profileImage;
     @BindView(R.id.username) TextView tvusername;
     @BindView(R.id.email) TextView tvemail;
+
+    @BindView(R.id.swipeRefreshLayout)
+    SwipeRefreshLayout swipeRefreshLayout;
 
     /* Variables */
     private static RecyclerView.Adapter adapter;
@@ -131,21 +135,29 @@ public class FavoritesActivity extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        /* -- SwipeRefreshLayout - Refresh System -- */
+        this.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                adapter = new CustomAdapter(MyVariables.starredVideos, getApplicationContext());
+                recyclerView.setAdapter(adapter);
+
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    protected void onResume() {
+        super.onResume();
 
-        if (MyVariables.starredVideos != null && !MyVariables.starredVideos.isEmpty()) {
-            recyclerView.setVisibility(View.VISIBLE);
-            adapter = new CustomAdapter(MyVariables.starredVideos, this);
-            recyclerView.setAdapter(adapter);
-        } else {
-            // Force RecyclerView to show nothing when remove last favorites from FavoriteActivity>DetailsActivity
-            recyclerView.setVisibility(View.GONE);
+        if (MyVariables.starredVideos == null || MyVariables.starredVideos.isEmpty()) {
             Toast.makeText(this, "Aucun favoris n'a été ajouté", Toast.LENGTH_SHORT).show();
         }
+
+        adapter = new CustomAdapter(MyVariables.starredVideos, this);
+        recyclerView.setAdapter(adapter);
     }
 
     private static class MyOnClickListenerForFavorite implements View.OnClickListener {

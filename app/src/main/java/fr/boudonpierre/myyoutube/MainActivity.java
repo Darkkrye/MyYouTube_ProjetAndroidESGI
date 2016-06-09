@@ -14,6 +14,7 @@ import android.os.Debug;
 import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -62,6 +63,8 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.username) TextView tvusername;
     @BindView(R.id.email) TextView tvemail;
 
+    @BindView(R.id.swipeRefreshLayout) SwipeRefreshLayout swipeRefreshLayout;
+
 
     /* Variables */
     private static RecyclerView.Adapter adapter;
@@ -72,6 +75,8 @@ public class MainActivity extends AppCompatActivity {
 
     static View.OnClickListener myOnClickListenerForMain;
     //RecyclerView.ItemAnimator itemAnimator;
+
+    public static Boolean isReloaded = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -147,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        fillRecycler();
+        fillRecycler(YouTubeService.ENDPOINT, false);
 
         /* Not as handsome
         // Animation
@@ -156,6 +161,20 @@ public class MainActivity extends AppCompatActivity {
         this.itemAnimator.setRemoveDuration(1000);
 
         this.recyclerView.setItemAnimator(this.itemAnimator);*/
+
+        /* -- SwipeRefreshLayout - Refresh System -- */
+        this.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+                if (isReloaded)
+                    fillRecycler(YouTubeService.ENDPOINT, false);
+                else
+                    fillRecycler(YouTubeService.ENDPOINT2, true);
+
+                isReloaded = !isReloaded;
+            }
+        });
     }
 
 
@@ -204,16 +223,24 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void fillRecycler() {
+    private void fillRecycler(String endpoint, Boolean isForReload) {
         // Retrofit Builder
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(YouTubeService.ENDPOINT)
+                .baseUrl(endpoint)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
         YouTubeService apiService = retrofit.create(YouTubeService.class);
 
-        Call<ArrayList<Video>> call = apiService.getVideos();
+
+        Call<ArrayList<Video>> call;
+        if (isForReload) {
+            call = apiService.getVideosReloaded();
+        } else {
+            call = apiService.getVideos();
+        }
+
+
         call.enqueue(new Callback<ArrayList<Video>>() {
             @Override
             public void onResponse(Call<ArrayList<Video>> call, Response<ArrayList<Video>> response) {
@@ -224,6 +251,8 @@ public class MainActivity extends AppCompatActivity {
                     showVideos(videos, statusCode);
                 else
                     showError("There's no videos !");
+
+                swipeRefreshLayout.setRefreshing(false);
             }
 
             @Override
