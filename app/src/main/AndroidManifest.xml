@@ -19,6 +19,13 @@
         </activity>
         <activity android:name=".activities.FavoritesActivity" />
         <activity android:name=".activities.DetailsActivity"></activity>
+
+       <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="65d090ec2d4bd2a8a8a219adcb031492acac7cf0" />
+         <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="65d090ec2d4bd2a8a8a219adcb031492acac7cf0" />
     </application>
 
 </manifest>

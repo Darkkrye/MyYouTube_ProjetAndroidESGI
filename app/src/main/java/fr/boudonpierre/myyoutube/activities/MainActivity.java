@@ -26,9 +26,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import io.fabric.sdk.android.Fabric;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -81,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Fabric.with(this, new Crashlytics());
 
         /* Deactivate Animation */
         if (getIntent().getBooleanExtra("fromDrawer", false)) {
