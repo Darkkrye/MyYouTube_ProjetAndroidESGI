@@ -11,7 +11,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 /**
- * Created by OpenFieldMacMini on 08/06/2016.
+ * Created by Pierre BOUDON on 08/06/2016.
  */
 public class MyVariables {
     /* TAG */

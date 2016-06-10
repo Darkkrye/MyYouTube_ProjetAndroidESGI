@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 /**
- * Created by OpenFieldMacMini on 06/06/2016.
+ * Created by Pierre BOUDON on 06/06/2016.
  */
 public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHolder> implements ItemTouchHelperAdapter {
 

@@ -1,7 +1,7 @@
 package fr.boudonpierre.myyoutube;
 
 /**
- * Created by OpenFieldMacMini on 06/06/2016.
+ * Created by Pierre BOUDON on 06/06/2016.
  */
 public class Video {
 
