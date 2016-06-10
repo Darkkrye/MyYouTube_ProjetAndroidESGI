@@ -24,6 +24,7 @@ import butterknife.OnClick;
 public class DetailsActivity extends AppCompatActivity {
 
     /* Binded View */
+    @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.detailsImage) ImageView detailsImage;
     @BindView(R.id.videoName) TextView videoName;
     @BindView(R.id.videoDescription) TextView videoDescription;
@@ -35,9 +36,9 @@ public class DetailsActivity extends AppCompatActivity {
     @BindView(R.id.textStar) TextView textStar;
 
     /* Variables */
-    @BindView(R.id.toolbar) Toolbar toolbar;
     Video video = MyVariables.currentVideo;
 
+    /* ONCREATE */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,7 +54,6 @@ public class DetailsActivity extends AppCompatActivity {
         /* Get Screen Width */
         DisplayMetrics displaymetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-        int height = displaymetrics.heightPixels;
         int width = displaymetrics.widthPixels;
 
         /* Fill with datas */
@@ -72,9 +72,20 @@ public class DetailsActivity extends AppCompatActivity {
         }
     }
 
-    /* Set On Click Listeners */
+
+    /* OVERRIDED METHODS */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
+        // Return to previous Activity
+        finish();
+        return super.onOptionsItemSelected(menuItem);
+    }
+
+
+    /* -- Butterknife - OnClickListeners -- */
     @OnClick(R.id.layoutFavoriteButton)
     public void onLayoutFavoriteButtonClick() {
+        // Get state of video
         Boolean isAlreadyStarred = false;
         int index = 0;
 
@@ -86,6 +97,7 @@ public class DetailsActivity extends AppCompatActivity {
             }
         }
 
+        // Set / Unset favorite video
         if (!isAlreadyStarred) {
             MyVariables.starredVideos.add(video);
             MyVariables.saveStarredVideos(getApplicationContext());
@@ -104,27 +116,25 @@ public class DetailsActivity extends AppCompatActivity {
             textStar.setText("Ajouter aux favoris");
         }
     }
+
     @OnClick(R.id.layoutViewVideoButton)
     public void onLayoutViewVideoButtonClick() {
+        // Open video URL in web browser
         Intent browse = new Intent(Intent.ACTION_VIEW, Uri.parse(video.getVideoUrl()));
         startActivity(browse);
     }
+
     @OnClick(R.id.shareFAB)
     public void onShareFABClick() {
+        // Share video URL in other application
         Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
         sharingIntent.setType("text/plain");
 
-        String shareBody = "Regardez cette super video : \n" + video.getVideoUrl();
+        String shareBody = "Regardez cette video : \n" + video.getVideoUrl();
 
         sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Partagez cette vidéo");
         sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
 
         startActivity(Intent.createChooser(sharingIntent, "Partager cette vidéo via"));
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem menuItem) {
-        finish();
-        return super.onOptionsItemSelected(menuItem);
     }
 }

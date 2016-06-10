@@ -78,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
 
     // RecyclerView.ItemAnimator itemAnimator; // Test Animation (can be uncommented but result is not as handsome
 
+    /* ONCREATE */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
