@@ -1,4 +1,4 @@
-package fr.boudonpierre.myyoutube.activities;
+package fr.boudonpierre.myyoutube;
 
 import android.content.Intent;
 import android.net.Uri;
