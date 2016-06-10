@@ -47,6 +47,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
+
     /* Binded Views */
     @BindView(R.id.drawer) DrawerLayout drawerLayout;
     @BindView(R.id.toolbar) Toolbar toolbar;
