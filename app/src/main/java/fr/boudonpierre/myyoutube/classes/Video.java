@@ -1,4 +1,4 @@
-package fr.boudonpierre.myyoutube;
+package fr.boudonpierre.myyoutube.classes;
 
 /**
  * Created by Pierre BOUDON on 06/06/2016.

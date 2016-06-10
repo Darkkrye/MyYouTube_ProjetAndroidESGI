@@ -1,4 +1,4 @@
-package fr.boudonpierre.myyoutube;
+package fr.boudonpierre.myyoutube.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;

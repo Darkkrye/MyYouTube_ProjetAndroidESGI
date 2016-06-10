@@ -1,4 +1,4 @@
-package fr.boudonpierre.myyoutube;
+package fr.boudonpierre.myyoutube.classes;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -9,6 +9,8 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+
+import fr.boudonpierre.myyoutube.R;
 
 /**
  * Created by Pierre BOUDON on 08/06/2016.

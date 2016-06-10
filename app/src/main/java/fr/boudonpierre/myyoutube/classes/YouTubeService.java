@@ -1,11 +1,9 @@
-package fr.boudonpierre.myyoutube;
+package fr.boudonpierre.myyoutube.classes;
 
 import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
-import retrofit2.http.Header;
-import retrofit2.http.Path;
 
 /**
  * Created by Pierre BOUDON on 06/06/2016.

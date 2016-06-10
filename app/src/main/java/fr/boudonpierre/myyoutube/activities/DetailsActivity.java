@@ -1,15 +1,12 @@
-package fr.boudonpierre.myyoutube;
+package fr.boudonpierre.myyoutube.activities;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -20,6 +17,9 @@ import com.squareup.picasso.Picasso;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import fr.boudonpierre.myyoutube.classes.MyVariables;
+import fr.boudonpierre.myyoutube.R;
+import fr.boudonpierre.myyoutube.classes.Video;
 
 public class DetailsActivity extends AppCompatActivity {
 
