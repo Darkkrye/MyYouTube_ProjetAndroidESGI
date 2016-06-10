@@ -72,13 +72,11 @@ public class MainActivity extends AppCompatActivity {
     private static RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
     private static RecyclerView recyclerView;
-
     ActionBarDrawerToggle drawerToggle;
-
     static View.OnClickListener myOnClickListenerForMain;
-    //RecyclerView.ItemAnimator itemAnimator;
-
     public static Boolean isReloaded = false;
+
+    // RecyclerView.ItemAnimator itemAnimator; // Test Animation (can be uncommented but result is not as handsome
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,8 +107,10 @@ public class MainActivity extends AppCompatActivity {
         this.favoritesLayoutDrawer.setBackgroundColor(Color.TRANSPARENT);
         this.updateNavigationDrawerUI();
 
+        /* -- RecyclerView - set On Click Listener -- */
         myOnClickListenerForMain = new MyOnClickListenerForMain(this);
 
+        /* -- RecyclerView - set information -- */
         recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
         recyclerView.setHasFixedSize(true);
 
@@ -118,25 +118,16 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
+        /* Know which json to load */
         if (isReloaded)
             fillRecycler(YouTubeService.ENDPOINT2, true);
         else
             fillRecycler(YouTubeService.ENDPOINT, false);
 
-
-        /* Not as handsome
-        // Animation
-        this.itemAnimator = new DefaultItemAnimator();
-        this.itemAnimator.setAddDuration(1000);
-        this.itemAnimator.setRemoveDuration(1000);
-
-        this.recyclerView.setItemAnimator(this.itemAnimator);*/
-
         /* -- SwipeRefreshLayout - Refresh System -- */
         this.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-
                 if (isReloaded)
                     fillRecycler(YouTubeService.ENDPOINT, false);
                 else
@@ -145,29 +136,17 @@ public class MainActivity extends AppCompatActivity {
                 isReloaded = !isReloaded;
             }
         });
+
+        /* Test Animation (can be uncommented but result is not as handsome */
+        /*this.itemAnimator = new DefaultItemAnimator();
+        this.itemAnimator.setAddDuration(1000);
+        this.itemAnimator.setRemoveDuration(1000);
+
+        this.recyclerView.setItemAnimator(this.itemAnimator);*/
     }
 
 
-    private static class MyOnClickListenerForMain implements View.OnClickListener {
-
-        private final Context context;
-
-        private MyOnClickListenerForMain(Context context) {
-            this.context = context;
-        }
-
-        @Override
-        public void onClick(View v) {
-            Video selectedVideo = MyVariables.videos.get(recyclerView.getChildAdapterPosition(v));
-
-            MyVariables.currentVideo = selectedVideo;
-
-            Intent i = new Intent(v.getContext(), DetailsActivity.class);
-            v.getContext().startActivity(i);
-        }
-    }
-
-
+    /* OVERRIDED METHODS */
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
@@ -183,16 +162,15 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Pass the event to ActionBarDrawerToggle, if it returns
-        // true, then it has handled the app icon touch event
         if (drawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
-        // Handle your other action bar items...
 
         return super.onOptionsItemSelected(item);
     }
 
+
+    /* PERSONNAL METHODS */
     private void fillRecycler(String endpoint, Boolean isForReload) {
         // Retrofit Builder
         Retrofit retrofit = new Retrofit.Builder()
@@ -202,7 +180,7 @@ public class MainActivity extends AppCompatActivity {
 
         YouTubeService apiService = retrofit.create(YouTubeService.class);
 
-
+        // Set which json to call
         Call<ArrayList<Video>> call;
         if (isForReload) {
             call = apiService.getVideosReloaded();
@@ -210,7 +188,7 @@ public class MainActivity extends AppCompatActivity {
             call = apiService.getVideos();
         }
 
-
+        // Add Callback to call queue
         call.enqueue(new Callback<ArrayList<Video>>() {
             @Override
             public void onResponse(Call<ArrayList<Video>> call, Response<ArrayList<Video>> response) {
@@ -234,10 +212,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showVideos(ArrayList<Video> videos, int statusCode) {
-        MyVariables.videos = videos;
-        // Fill with data
-        adapter = new CustomAdapter(videos, this);
-        recyclerView.setAdapter(adapter);
+
+        if (statusCode == 200) {
+            MyVariables.videos = videos;
+
+            adapter = new CustomAdapter(videos, this);
+            recyclerView.setAdapter(adapter);
+        } else
+            Toast.makeText(this, "Code erreur : " + String.valueOf(statusCode), Toast.LENGTH_SHORT).show();
     }
 
     private void showError(String message) {
@@ -245,15 +227,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateNavigationDrawerUI() {
+        // Update textviews
         tvusername.setText(MyVariables.usernames[MyVariables.currentUser]);
         tvemail.setText(MyVariables.emails[MyVariables.currentUser]);
+
+        // Update profile picture
         Picasso.with(getApplicationContext()).load(MyVariables.profileImages[MyVariables.currentUser]).into(profileImage);
+
+        // Update Header background of the Navigation Drawer
         Picasso.with(getApplicationContext())
                 .load(MyVariables.backgroundImages[MyVariables.currentUser])
                 .into(new Target() {
                     @Override
                     @TargetApi(16)
                     public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                        // Load the image into the background header
                         int sdk = android.os.Build.VERSION.SDK_INT;
                         if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
                             headerLayoutDrawer.setBackgroundDrawable(new BitmapDrawable(bitmap));
@@ -264,21 +252,21 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onBitmapFailed(Drawable errorDrawable) {
-                        // use error drawable if desired
                         Toast.makeText(getApplicationContext(), String.valueOf(errorDrawable), Toast.LENGTH_LONG).show();
                     }
 
                     @Override
                     public void onPrepareLoad(Drawable placeHolderDrawable) {
-                        // use placeholder drawable if desired
+                        // Do something when starts loading
                     }
                 });
     }
 
-    /* -- Navigation Drawer - OnClickListeners -- */
+
+    /* -- Butterknife - OnClickListeners -- */
     @OnClick(R.id.headerLayout)
     public void onHeaderLayoutDrawerClick() {
-        /* Change current user and save it */
+        // Change current user and save it
         if (MyVariables.currentUser == MyVariables.usernames.length - 1) {
             MyVariables.currentUser = 0;
         } else {
@@ -286,19 +274,44 @@ public class MainActivity extends AppCompatActivity {
         }
         MyVariables.saveCurrentUser(getApplicationContext());
 
-                /* Update UI */
+        // Update UI
         updateNavigationDrawerUI();
     }
+
     @OnClick(R.id.homeLayout)
     public void onHomeLayoutDrawerClick() {
         drawerLayout.closeDrawer(Gravity.LEFT);
     }
+
     @OnClick(R.id.favoritesLayout)
     public void onFavoriteLayoutClick() {
+        // Close Navigation Drawer and change to FavoritesActivity
         drawerLayout.closeDrawer(Gravity.LEFT);
 
         Intent intent = new Intent(MainActivity.this, FavoritesActivity.class);
         intent.putExtra("fromDrawer", true);
         startActivity(intent);
+    }
+
+
+    /* PRIVATE STATIC CLASSES */
+    private static class MyOnClickListenerForMain implements View.OnClickListener {
+
+        private final Context context;
+
+        /* CONSTRUCTOR */
+        private MyOnClickListenerForMain(Context context) {
+            this.context = context;
+        }
+
+        /* OVERRIDED METHODS */
+        @Override
+        public void onClick(View v) {
+            // Set current video and change to DetailsActivity
+            MyVariables.currentVideo = MyVariables.videos.get(recyclerView.getChildAdapterPosition(v));
+
+            Intent i = new Intent(v.getContext(), DetailsActivity.class);
+            v.getContext().startActivity(i);
+        }
     }
 }
