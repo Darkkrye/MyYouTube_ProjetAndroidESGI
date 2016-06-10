@@ -301,6 +301,7 @@ public class MainActivity extends AppCompatActivity {
     /* PRIVATE STATIC CLASSES */
     private static class MyOnClickListenerForMain implements View.OnClickListener {
 
+        /* VARIABLES */
         private final Context context;
 
         /* CONSTRUCTOR */

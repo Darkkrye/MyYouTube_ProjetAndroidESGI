@@ -22,11 +22,61 @@ import java.util.Collections;
  */
 public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHolder> implements ItemTouchHelperAdapter {
 
-    private ArrayList<Video> videos;
+    /* VARIABLES */
     Context context;
+    private ArrayList<Video> videos;
+
+
+    /* CONSTRUCTOR */
+    public CustomAdapter(ArrayList<Video> videos, Context context) {
+        this.videos = videos;
+        this.context = context;
+    }
+
+
+    /* ONCREATE / ONBIND / GETITEMCOUNT */
+    @Override
+    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+        // Create View
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.cards_layout, parent, false);
+
+        // Set good On Click Listener
+        if (parent.getContext() instanceof MainActivity) {
+            view.setOnClickListener(MainActivity.myOnClickListenerForMain);
+        } else {
+            view.setOnClickListener(FavoritesActivity.myOnClickListenerForFavorite);
+        }
+
+        MyViewHolder myViewHolder = new MyViewHolder(view);
+        return myViewHolder;
+    }
 
     @Override
+    public void onBindViewHolder(final MyViewHolder holder, final int listPosition) {
+
+        // Fill with data
+        TextView textViewName = holder.textViewName;
+        TextView textViewVersion = holder.textViewVersion;
+        ImageView imageView = holder.imageViewIcon;
+
+        textViewName.setText(videos.get(listPosition).getName());
+        textViewVersion.setText(videos.get(listPosition).getDescription());
+        Picasso.with(holder.itemView.getContext()).load(videos.get(listPosition).getImageUrl()).resize(475, 325).into(imageView);
+
+        //animate(holder); // Test Animation (can be uncommented but result is not as handsome
+    }
+
+    @Override
+    public int getItemCount() {
+        return videos.size();
+    }
+
+
+    /* OVERRIDED METHODS */
+    @Override
     public Boolean onItemMove(int fromPosition, int toPosition) {
+        // Move item from a position to another one
         if (fromPosition < toPosition) {
             for (int i = fromPosition; i < toPosition; i++) {
                 Collections.swap(MyVariables.starredVideos, i, i + 1);
@@ -36,8 +86,11 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
                 Collections.swap(MyVariables.starredVideos, i, i - 1);
             }
         }
+
+        // Apply the UI change
         notifyItemMoved(fromPosition, toPosition);
 
+        // Save the modified array
         MyVariables.saveStarredVideos(context);
 
         return true;
@@ -45,11 +98,14 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
 
     @Override
     public void onItemDismiss(int position) {
+        // Remove item from the array and apply the UI change
         MyVariables.starredVideos.remove(position);
         notifyItemRemoved(position);
 
+        // Save the modified array
         MyVariables.saveStarredVideos(context);
 
+        // Check if the starred videos array is empty to show message and change to MainActivity
         if (MyVariables.starredVideos == null || MyVariables.starredVideos.isEmpty()) {
             Toast.makeText(context, "Plus aucun favoris !", Toast.LENGTH_SHORT).show();
 
@@ -59,12 +115,16 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
         }
     }
 
+
+    /* PUBLIC STATIC CLASSES */
     public static class MyViewHolder extends RecyclerView.ViewHolder {
 
+        /* VARIABLES */
         TextView textViewName;
         TextView textViewVersion;
         ImageView imageViewIcon;
 
+        /* CONSTRUCTOR */
         public MyViewHolder(View itemView) {
             super(itemView);
             this.textViewName = (TextView) itemView.findViewById(R.id.textViewName);
@@ -73,50 +133,11 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
         }
     }
 
-    public CustomAdapter(ArrayList<Video> videos, Context context) {
-        this.videos = videos;
-        this.context = context;
-    }
 
-    @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent,
-                                           int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.cards_layout, parent, false);
-
-        if (parent.getContext() instanceof MainActivity) {
-            view.setOnClickListener(MainActivity.myOnClickListenerForMain);
-        } else {
-            view.setOnClickListener(FavoritesActivity.myOnClickListenerForFavorite);
-        }
-
-
-
-        MyViewHolder myViewHolder = new MyViewHolder(view);
-        return myViewHolder;
-    }
-
-    @Override
-    public void onBindViewHolder(final MyViewHolder holder, final int listPosition) {
-
-        TextView textViewName = holder.textViewName;
-        TextView textViewVersion = holder.textViewVersion;
-        ImageView imageView = holder.imageViewIcon;
-
-        textViewName.setText(videos.get(listPosition).getName());
-        textViewVersion.setText(videos.get(listPosition).getDescription());
-        Picasso.with(holder.itemView.getContext()).load(videos.get(listPosition).getImageUrl()).resize(475, 325).into(imageView);
-
-        //animate(holder);
-    }
-
-    @Override
-    public int getItemCount() {
-        return videos.size();
-    }
-
-    public void animate(RecyclerView.ViewHolder viewHolder) {
+    /* PERSONNAL METHODS */
+    // Test Animation (can be uncommented but result is not as handsome
+    /*public void animate(RecyclerView.ViewHolder viewHolder) {
         final Animation animAnticipateOvershoot = AnimationUtils.loadAnimation(context, R.anim.bounce_interpolator);
         viewHolder.itemView.setAnimation(animAnticipateOvershoot);
-    }
+    }*/
 }

@@ -232,12 +232,15 @@ public class FavoritesActivity extends AppCompatActivity {
     /* PRIVATE STATIC CLASSES */
     private static class MyOnClickListenerForFavorite implements View.OnClickListener {
 
+        /* VARIABLES */
         private final Context context;
 
+        /* CONSTRUCTOR */
         private MyOnClickListenerForFavorite(Context context) {
             this.context = context;
         }
 
+        /* OVERRIDED METHODS */
         @Override
         public void onClick(View v) {
             // Set current video and change to DetailsActivity
