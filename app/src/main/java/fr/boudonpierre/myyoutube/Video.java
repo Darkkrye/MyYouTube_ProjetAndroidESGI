@@ -5,12 +5,15 @@ package fr.boudonpierre.myyoutube;
  */
 public class Video {
 
+    /* VARIABLES */
     String id;
     String name;
     String description;
     String imageUrl;
     String videoUrl;
 
+
+    /* CONSTRUCTOR */
     public Video(String id, String name, String description, String imageUrl, String videoUrl) {
         this.id = id;
         this.name = name;
@@ -19,6 +22,8 @@ public class Video {
         this.videoUrl = videoUrl;
     }
 
+
+    /* GETTERS & SETTERS */
     public String getId() {
         return id;
     }
