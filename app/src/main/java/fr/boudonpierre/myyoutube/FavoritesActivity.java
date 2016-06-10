@@ -20,6 +20,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -123,6 +124,11 @@ public class FavoritesActivity extends AppCompatActivity {
 
         adapter = new CustomAdapter(MyVariables.starredVideos, this);
         recyclerView.setAdapter(adapter);
+
+        /* -- RecyclerView - Item Move -- */
+        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback((ItemTouchHelperAdapter) adapter);
+        ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
+        touchHelper.attachToRecyclerView(recyclerView);
     }
 
     private static class MyOnClickListenerForFavorite implements View.OnClickListener {

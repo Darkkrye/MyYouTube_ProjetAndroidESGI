@@ -1,6 +1,7 @@
 package fr.boudonpierre.myyoutube;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,18 +10,54 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Created by OpenFieldMacMini on 06/06/2016.
  */
-public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHolder> {
+public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHolder> implements ItemTouchHelperAdapter {
 
     private ArrayList<Video> videos;
     Context context;
+
+    @Override
+    public Boolean onItemMove(int fromPosition, int toPosition) {
+        if (fromPosition < toPosition) {
+            for (int i = fromPosition; i < toPosition; i++) {
+                Collections.swap(MyVariables.starredVideos, i, i + 1);
+            }
+        } else {
+            for (int i = fromPosition; i > toPosition; i--) {
+                Collections.swap(MyVariables.starredVideos, i, i - 1);
+            }
+        }
+        notifyItemMoved(fromPosition, toPosition);
+
+        MyVariables.saveStarredVideos(context);
+
+        return true;
+    }
+
+    @Override
+    public void onItemDismiss(int position) {
+        MyVariables.starredVideos.remove(position);
+        notifyItemRemoved(position);
+
+        MyVariables.saveStarredVideos(context);
+
+        if (MyVariables.starredVideos == null || MyVariables.starredVideos.isEmpty()) {
+            Toast.makeText(context, "Plus aucun favoris !", Toast.LENGTH_SHORT).show();
+
+            Intent intent = new Intent(context, MainActivity.class);
+            intent.putExtra("fromDrawer", true);
+            context.startActivity(intent);
+        }
+    }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
 
