@@ -8,12 +8,17 @@ import android.support.v7.widget.helper.ItemTouchHelper;
  */
 public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
+    /* VARIABLES */
     private final ItemTouchHelperAdapter mAdapter;
 
+
+    /* CONSTRUCTOR */
     public SimpleItemTouchHelperCallback(ItemTouchHelperAdapter adapter) {
         mAdapter = adapter;
     }
 
+
+    /* OVERRIDED METHODS */
     @Override
     public boolean isLongPressDragEnabled() {
         return true;
@@ -32,14 +37,15 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
     }
 
     @Override
-    public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
-                          RecyclerView.ViewHolder target) {
+    public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+        // Call back when item has been moved
         mAdapter.onItemMove(viewHolder.getAdapterPosition(), target.getAdapterPosition());
         return true;
     }
 
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+        // Call back when item has been swiped
         mAdapter.onItemDismiss(viewHolder.getAdapterPosition());
     }
 
