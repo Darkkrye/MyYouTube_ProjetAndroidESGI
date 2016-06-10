@@ -1,4 +1,4 @@
-package fr.boudonpierre.myyoutube;
+package fr.boudonpierre.myyoutube.activities;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -35,8 +35,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
-import fr.boudonpierre.myyoutube.activities.DetailsActivity;
-import fr.boudonpierre.myyoutube.activities.FavoritesActivity;
+import fr.boudonpierre.myyoutube.R;
 import fr.boudonpierre.myyoutube.adapter.CustomAdapter;
 import fr.boudonpierre.myyoutube.classes.MyVariables;
 import fr.boudonpierre.myyoutube.classes.Video;
