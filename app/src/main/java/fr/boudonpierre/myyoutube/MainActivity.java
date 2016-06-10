@@ -72,8 +72,11 @@ public class MainActivity extends AppCompatActivity {
     private static RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
     private static RecyclerView recyclerView;
+
     ActionBarDrawerToggle drawerToggle;
+
     static View.OnClickListener myOnClickListenerForMain;
+
     public static Boolean isReloaded = false;
 
     // RecyclerView.ItemAnimator itemAnimator; // Test Animation (can be uncommented but result is not as handsome
@@ -108,10 +111,10 @@ public class MainActivity extends AppCompatActivity {
         this.favoritesLayoutDrawer.setBackgroundColor(Color.TRANSPARENT);
         this.updateNavigationDrawerUI();
 
-        /* -- RecyclerView - set On Click Listener -- */
+        /* -- RecyclerView - Create On Click Listener -- */
         myOnClickListenerForMain = new MyOnClickListenerForMain(this);
 
-        /* -- RecyclerView - set information -- */
+        /* -- RecyclerView - Set information -- */
         recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
         recyclerView.setHasFixedSize(true);
 

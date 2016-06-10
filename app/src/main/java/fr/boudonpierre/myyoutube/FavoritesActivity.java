@@ -56,8 +56,8 @@ public class FavoritesActivity extends AppCompatActivity {
     @BindView(R.id.username) TextView tvusername;
     @BindView(R.id.email) TextView tvemail;
 
-    @BindView(R.id.swipeRefreshLayout)
-    SwipeRefreshLayout swipeRefreshLayout;
+    @BindView(R.id.swipeRefreshLayout) SwipeRefreshLayout swipeRefreshLayout;
+
 
     /* Variables */
     private static RecyclerView.Adapter adapter;
@@ -68,6 +68,8 @@ public class FavoritesActivity extends AppCompatActivity {
 
     static View.OnClickListener myOnClickListenerForFavorite;
 
+
+    /* ONCREATE */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,8 +95,10 @@ public class FavoritesActivity extends AppCompatActivity {
         this.homeLayoutDrawer.setBackgroundColor(Color.TRANSPARENT);
         this.updateNavigationDrawerUI();
 
+        /* -- Navigation Drawer - Create On Click Listener -- */
         myOnClickListenerForFavorite = new MyOnClickListenerForFavorite(this);
 
+        /* -- RecyclerView - Set information -- */
         recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
         recyclerView.setHasFixedSize(true);
 
@@ -114,10 +118,13 @@ public class FavoritesActivity extends AppCompatActivity {
         });
     }
 
+
+    /* ONRESUME */
     @Override
     protected void onResume() {
         super.onResume();
 
+        // Load the reloaded and good one starredVideo array
         if (MyVariables.starredVideos == null || MyVariables.starredVideos.isEmpty()) {
             Toast.makeText(this, "Aucun favoris n'a été ajouté", Toast.LENGTH_SHORT).show();
         }
@@ -131,26 +138,8 @@ public class FavoritesActivity extends AppCompatActivity {
         touchHelper.attachToRecyclerView(recyclerView);
     }
 
-    private static class MyOnClickListenerForFavorite implements View.OnClickListener {
 
-        private final Context context;
-
-        private MyOnClickListenerForFavorite(Context context) {
-            this.context = context;
-        }
-
-        @Override
-        public void onClick(View v) {
-            Video selectedVideo = MyVariables.starredVideos.get(recyclerView.getChildAdapterPosition(v));
-            //Toast.makeText(v.getContext(), selectedVideo.getName() + " starred", Toast.LENGTH_SHORT).show();
-
-            MyVariables.currentVideo = selectedVideo;
-
-            Intent i = new Intent(v.getContext(), DetailsActivity.class);
-            v.getContext().startActivity(i);
-        }
-    }
-
+    /* OVERRIDED METHODS */
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
@@ -166,26 +155,31 @@ public class FavoritesActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Pass the event to ActionBarDrawerToggle, if it returns
-        // true, then it has handled the app icon touch event
         if (drawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
-        // Handle your other action bar items...
 
         return super.onOptionsItemSelected(item);
     }
 
+
+    /* PERSONNAL METHODS */
     private void updateNavigationDrawerUI() {
+        // Update textviews
         tvusername.setText(MyVariables.usernames[MyVariables.currentUser]);
         tvemail.setText(MyVariables.emails[MyVariables.currentUser]);
+
+        // Update profile picture
         Picasso.with(getApplicationContext()).load(MyVariables.profileImages[MyVariables.currentUser]).into(profileImage);
+
+        // Update Header background of the Navigation Drawer
         Picasso.with(getApplicationContext())
                 .load(MyVariables.backgroundImages[MyVariables.currentUser])
                 .into(new Target() {
                     @Override
                     @TargetApi(16)
                     public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                        // Load the image into the background header
                         int sdk = android.os.Build.VERSION.SDK_INT;
                         if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
                             headerLayoutDrawer.setBackgroundDrawable(new BitmapDrawable(bitmap));
@@ -196,18 +190,18 @@ public class FavoritesActivity extends AppCompatActivity {
 
                     @Override
                     public void onBitmapFailed(Drawable errorDrawable) {
-                        // use error drawable if desired
                         Toast.makeText(getApplicationContext(), String.valueOf(errorDrawable), Toast.LENGTH_LONG).show();
                     }
 
                     @Override
                     public void onPrepareLoad(Drawable placeHolderDrawable) {
-                        // use placeholder drawable if desired
+                        // Do something when starts loading
                     }
                 });
     }
 
-    /* -- Navigation Drawer - OnClickListeners -- */
+
+    /* -- Butterknife - OnClickListeners -- */
     @OnClick(R.id.headerLayout)
     public void onHeaderLayoutDrawerClick() {
         /* Change current user and save it */
@@ -232,5 +226,25 @@ public class FavoritesActivity extends AppCompatActivity {
     @OnClick(R.id.favoritesLayout)
     public void onFavoriteLayoutClick() {
         drawerLayout.closeDrawer(Gravity.LEFT);
+    }
+
+
+    /* PRIVATE STATIC CLASSES */
+    private static class MyOnClickListenerForFavorite implements View.OnClickListener {
+
+        private final Context context;
+
+        private MyOnClickListenerForFavorite(Context context) {
+            this.context = context;
+        }
+
+        @Override
+        public void onClick(View v) {
+            // Set current video and change to DetailsActivity
+            MyVariables.currentVideo = MyVariables.starredVideos.get(recyclerView.getChildAdapterPosition(v));
+
+            Intent i = new Intent(v.getContext(), DetailsActivity.class);
+            v.getContext().startActivity(i);
+        }
     }
 }
