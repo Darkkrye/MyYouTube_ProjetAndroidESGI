@@ -20,6 +20,8 @@ Cette application a été développée par Pierre BOUDON et Nicolas KERVOERN.
 	- (S) Afficher les détails de la vidéo en cliquant dessus, 
 	- (S) Rester appuyer et déplacer vers le haut ou vers le bas pour réordonner les favoris, 
 	- (S) Swiper vers la gauche ou vers la droite pour supprimer rapidement un favoris; 
+- (S) Ajout d'un système d'Analytics d'utilisation et de crash
+- (S) Ajout d'un système de bêta test.
 
 
 (Attention ! Certaines personnalités peuvent s'être glissées dans l'application.)
