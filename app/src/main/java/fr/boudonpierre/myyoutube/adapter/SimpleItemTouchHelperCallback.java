@@ -3,6 +3,8 @@ package fr.boudonpierre.myyoutube.adapter;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 
+import fr.boudonpierre.myyoutube.interfaces.ItemTouchHelperAdapter;
+
 /**
  * Created by Pierre BOUDON on 10/06/2016.
  */

@@ -2,6 +2,7 @@ package fr.boudonpierre.myyoutube.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,9 +20,9 @@ import fr.boudonpierre.myyoutube.activities.AppActivity;
 import fr.boudonpierre.myyoutube.classes.MyVariables;
 import fr.boudonpierre.myyoutube.R;
 import fr.boudonpierre.myyoutube.classes.Video;
-import fr.boudonpierre.myyoutube.activities.FavoritesActivity;
-import fr.boudonpierre.myyoutube.activities.MainActivity;
+import fr.boudonpierre.myyoutube.fragments.FavoritesFragment;
 import fr.boudonpierre.myyoutube.fragments.ListFragment;
+import fr.boudonpierre.myyoutube.interfaces.ItemTouchHelperAdapter;
 
 /**
  * Created by Pierre BOUDON on 06/06/2016.
@@ -48,10 +49,12 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.cards_layout, parent, false);
 
         // Set good On Click Listener
-        if (parent.getContext() instanceof AppActivity) {
+        AppActivity activity = (AppActivity) parent.getContext();
+        Fragment fragment = activity.getSupportFragmentManager().findFragmentByTag("listFragment");
+        if (fragment != null && fragment.isVisible()) {
             view.setOnClickListener(ListFragment.myOnClickListener);
         } else {
-            view.setOnClickListener(FavoritesActivity.myOnClickListenerForFavorite);
+            view.setOnClickListener(FavoritesFragment.myOnClickListener);
         }
 
         MyViewHolder myViewHolder = new MyViewHolder(view);
@@ -115,8 +118,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
         if (MyVariables.starredVideos == null || MyVariables.starredVideos.isEmpty()) {
             Toast.makeText(context, "Plus aucun favoris !", Toast.LENGTH_SHORT).show();
 
-            Intent intent = new Intent(context, MainActivity.class);
-            intent.putExtra("fromDrawer", true);
+            Intent intent = new Intent(context, AppActivity.class);
             context.startActivity(intent);
         }
     }

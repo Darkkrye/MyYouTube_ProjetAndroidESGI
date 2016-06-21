@@ -9,32 +9,26 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-
-import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import fr.boudonpierre.myyoutube.R;
 import fr.boudonpierre.myyoutube.activities.DetailsActivity;
 import fr.boudonpierre.myyoutube.adapter.CustomAdapter;
+import fr.boudonpierre.myyoutube.interfaces.ItemTouchHelperAdapter;
+import fr.boudonpierre.myyoutube.adapter.SimpleItemTouchHelperCallback;
 import fr.boudonpierre.myyoutube.classes.MyVariables;
-import fr.boudonpierre.myyoutube.classes.Video;
-import fr.boudonpierre.myyoutube.interfaces.YouTubeService;
 import fr.boudonpierre.myyoutube.interfaces.ListFragmentCallback;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by OpenFieldMacMini on 21/06/2016.
  */
-public class ListFragment extends Fragment {
+public class FavoritesFragment extends Fragment {
 
     @BindView(R.id.swipeRefreshLayout) SwipeRefreshLayout swipeRefreshLayout;
 
@@ -44,13 +38,12 @@ public class ListFragment extends Fragment {
 
     public static View.OnClickListener myOnClickListener;
     public static Boolean isReloaded = false;
-
-    public static Fragment newInstance() {
-        return new ListFragment();
-    }
-
     public static ListFragmentCallback callback;
     public static Boolean tabletMode = false;
+
+    public static Fragment newInstance() {
+        return new FavoritesFragment();
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -82,24 +75,34 @@ public class ListFragment extends Fragment {
 
         this.myOnClickListener = new MyOnClickListenerForMain(getContext());
 
-        /* Know which json to load */
-        if (isReloaded)
-            fillRecycler(YouTubeService.ENDPOINT2, true);
-        else
-            fillRecycler(YouTubeService.ENDPOINT, false);
-
         /* -- SwipeRefreshLayout - Refresh System -- */
         this.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (isReloaded)
-                    fillRecycler(YouTubeService.ENDPOINT, false);
-                else
-                    fillRecycler(YouTubeService.ENDPOINT2, true);
+                adapter = new CustomAdapter(MyVariables.starredVideos, getContext());
+                recyclerView.setAdapter(adapter);
 
-                isReloaded = !isReloaded;
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // Load the reloaded and good one starredVideo array
+        if (MyVariables.starredVideos == null || MyVariables.starredVideos.isEmpty()) {
+            Toast.makeText(getContext(), "Aucun favoris n'a été ajouté", Toast.LENGTH_SHORT).show();
+        }
+
+        adapter = new CustomAdapter(MyVariables.starredVideos, getContext());
+        recyclerView.setAdapter(adapter);
+
+        /* -- RecyclerView - Item Move -- */
+        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback((ItemTouchHelperAdapter) adapter);
+        ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
+        touchHelper.attachToRecyclerView(recyclerView);
     }
 
     @Override
@@ -111,63 +114,9 @@ public class ListFragment extends Fragment {
     }
 
     /* PERSONNAL METHODS */
-    private void fillRecycler(String endpoint, Boolean isForReload) {
-        // Retrofit Builder
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(endpoint)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        YouTubeService apiService = retrofit.create(YouTubeService.class);
-
-        // Set which json to call
-        Call<ArrayList<Video>> call;
-        if (isForReload) {
-            call = apiService.getVideosReloaded();
-        } else {
-            call = apiService.getVideos();
-        }
-
-        // Add Callback to call queue
-        call.enqueue(new Callback<ArrayList<Video>>() {
-            @Override
-            public void onResponse(Call<ArrayList<Video>> call, Response<ArrayList<Video>> response) {
-                int statusCode = response.code();
-                ArrayList<Video> videos = response.body();
-
-                if (videos != null)
-                    showVideos(videos, statusCode);
-                else
-                    showError("There's no videos !");
-
-                swipeRefreshLayout.setRefreshing(false);
-            }
-
-            @Override
-            public void onFailure(Call<ArrayList<Video>> call, Throwable t) {
-                showError(String.valueOf(t));
-                showError("Un problème est survenu. Vérifiez votre connexion internet");
-            }
-        });
-    }
-
-    private void showVideos(ArrayList<Video> videos, int statusCode) {
-
-        if (statusCode == 200) {
-            MyVariables.videos = videos;
-
-            adapter = new CustomAdapter(videos, getContext());
-            recyclerView.setAdapter(adapter);
-        } else
-            Toast.makeText(getContext(), "Code erreur : " + String.valueOf(statusCode), Toast.LENGTH_SHORT).show();
-    }
-
-    private void showError(String message) {
-        Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
-    }
 
     /* PRIVATE STATIC CLASSES */
-    public static class MyOnClickListenerForMain implements View.OnClickListener {
+    private static class MyOnClickListenerForMain implements View.OnClickListener {
 
         /* VARIABLES */
         private final Context context;
@@ -181,7 +130,7 @@ public class ListFragment extends Fragment {
         @Override
         public void onClick(View v) {
             // Set current video and change to DetailsActivity
-            MyVariables.currentVideo = MyVariables.videos.get(recyclerView.getChildAdapterPosition(v));
+            MyVariables.currentVideo = MyVariables.starredVideos.get(recyclerView.getChildAdapterPosition(v));
 
             if(tabletMode && callback != null){
                 callback.onVideoClicked();

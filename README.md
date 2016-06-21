@@ -22,6 +22,8 @@ Cette application a été développée par Pierre BOUDON et Nicolas KERVOERN.
 	- (S) Swiper vers la gauche ou vers la droite pour supprimer rapidement un favoris; 
 - (S) Ajout d'un système d'Analytics d'utilisation et de crash
 - (S) Ajout d'un système de bêta test.
+- (S) Transformation des Activités en Fragment : 
+	- (S) Affichage en split screen sur une tablette (de préférence Nexus 9 - mode paysage)
 
 
 (Attention ! Certaines personnalités peuvent s'être glissées dans l'application.)

@@ -1,7 +1,8 @@
-package fr.boudonpierre.myyoutube.classes;
+package fr.boudonpierre.myyoutube.interfaces;
 
 import java.util.ArrayList;
 
+import fr.boudonpierre.myyoutube.classes.Video;
 import retrofit2.Call;
 import retrofit2.http.GET;
 

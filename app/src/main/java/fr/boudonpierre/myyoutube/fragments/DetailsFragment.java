@@ -5,11 +5,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,7 +22,6 @@ import butterknife.OnClick;
 import fr.boudonpierre.myyoutube.R;
 import fr.boudonpierre.myyoutube.classes.MyVariables;
 import fr.boudonpierre.myyoutube.classes.Video;
-import fr.boudonpierre.myyoutube.classes.YouTubeService;
 
 /**
  * Created by OpenFieldMacMini on 21/06/2016.

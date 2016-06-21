@@ -1,4 +1,4 @@
-package fr.boudonpierre.myyoutube.adapter;
+package fr.boudonpierre.myyoutube.interfaces;
 
 /**
  * Created by Pierre BOUDON on 10/06/2016.

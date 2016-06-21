@@ -36,7 +36,7 @@ import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 import fr.boudonpierre.myyoutube.R;
 import fr.boudonpierre.myyoutube.adapter.CustomAdapter;
-import fr.boudonpierre.myyoutube.adapter.ItemTouchHelperAdapter;
+import fr.boudonpierre.myyoutube.interfaces.ItemTouchHelperAdapter;
 import fr.boudonpierre.myyoutube.classes.MyVariables;
 import fr.boudonpierre.myyoutube.adapter.SimpleItemTouchHelperCallback;
 

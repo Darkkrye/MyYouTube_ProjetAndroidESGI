@@ -41,7 +41,7 @@ import fr.boudonpierre.myyoutube.R;
 import fr.boudonpierre.myyoutube.adapter.CustomAdapter;
 import fr.boudonpierre.myyoutube.classes.MyVariables;
 import fr.boudonpierre.myyoutube.classes.Video;
-import fr.boudonpierre.myyoutube.classes.YouTubeService;
+import fr.boudonpierre.myyoutube.interfaces.YouTubeService;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

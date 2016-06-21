@@ -1,7 +1,6 @@
 package fr.boudonpierre.myyoutube.activities;
 
 import android.annotation.TargetApi;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -12,11 +11,9 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -30,12 +27,13 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 import fr.boudonpierre.myyoutube.R;
+import fr.boudonpierre.myyoutube.interfaces.ListFragmentCallback;
 import fr.boudonpierre.myyoutube.classes.MyVariables;
-import fr.boudonpierre.myyoutube.classes.Video;
 import fr.boudonpierre.myyoutube.fragments.DetailsFragment;
+import fr.boudonpierre.myyoutube.fragments.FavoritesFragment;
 import fr.boudonpierre.myyoutube.fragments.ListFragment;
 
-public class AppActivity extends AppCompatActivity implements ListFragment.ListFragmentCallback {
+public class AppActivity extends AppCompatActivity implements ListFragmentCallback {
 
     /* Binded Views */
     @BindView(R.id.drawer) DrawerLayout drawerLayout;
@@ -166,7 +164,7 @@ public class AppActivity extends AppCompatActivity implements ListFragment.ListF
         // Close Navigation Drawer and change to Home
         drawerLayout.closeDrawer(Gravity.LEFT);
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.contentLayout, ListFragment.newInstance(), "listFragments")
+                .replace(R.id.contentLayout, ListFragment.newInstance(), "listFragment")
                 .commit();
     }
 
@@ -177,6 +175,10 @@ public class AppActivity extends AppCompatActivity implements ListFragment.ListF
 
         // Close Navigation Drawer and change to Favorites
         drawerLayout.closeDrawer(Gravity.LEFT);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.contentLayout, FavoritesFragment.newInstance(), "favoritesListFragment")
+                .addToBackStack(null)
+                .commit();
     }
 
 
