@@ -10,7 +10,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.MainActivity">
+        <activity android:name=".activities.AppActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -18,14 +18,16 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.FavoritesActivity" />
-        <activity android:name=".activities.DetailsActivity"></activity>
+        <activity android:name=".activities.DetailsActivity" />
 
-       <meta-data
+        <meta-data
             android:name="io.fabric.ApiKey"
             android:value="65d090ec2d4bd2a8a8a219adcb031492acac7cf0" />
-         <meta-data
+        <meta-data
             android:name="io.fabric.ApiKey"
             android:value="65d090ec2d4bd2a8a8a219adcb031492acac7cf0" />
+
+        <activity android:name=".activities.MainActivity"></activity>
     </application>
 
 </manifest>

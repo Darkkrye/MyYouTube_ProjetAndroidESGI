@@ -15,11 +15,13 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import fr.boudonpierre.myyoutube.activities.AppActivity;
 import fr.boudonpierre.myyoutube.classes.MyVariables;
 import fr.boudonpierre.myyoutube.R;
 import fr.boudonpierre.myyoutube.classes.Video;
 import fr.boudonpierre.myyoutube.activities.FavoritesActivity;
 import fr.boudonpierre.myyoutube.activities.MainActivity;
+import fr.boudonpierre.myyoutube.fragments.ListFragment;
 
 /**
  * Created by Pierre BOUDON on 06/06/2016.
@@ -46,8 +48,8 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.cards_layout, parent, false);
 
         // Set good On Click Listener
-        if (parent.getContext() instanceof MainActivity) {
-            view.setOnClickListener(MainActivity.myOnClickListenerForMain);
+        if (parent.getContext() instanceof AppActivity) {
+            view.setOnClickListener(ListFragment.myOnClickListener);
         } else {
             view.setOnClickListener(FavoritesActivity.myOnClickListenerForFavorite);
         }
