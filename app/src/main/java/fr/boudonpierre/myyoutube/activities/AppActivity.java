@@ -19,6 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -32,6 +33,7 @@ import fr.boudonpierre.myyoutube.classes.MyVariables;
 import fr.boudonpierre.myyoutube.fragments.DetailsFragment;
 import fr.boudonpierre.myyoutube.fragments.FavoritesFragment;
 import fr.boudonpierre.myyoutube.fragments.ListFragment;
+import io.fabric.sdk.android.Fabric;
 
 public class AppActivity extends AppCompatActivity implements ListFragmentCallback {
 
@@ -53,6 +55,7 @@ public class AppActivity extends AppCompatActivity implements ListFragmentCallba
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_app);
 
         /* Reload Shared Preferences */
