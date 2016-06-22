@@ -26,4 +26,4 @@ Cette application a été développée par Pierre BOUDON et Nicolas KERVOERN.
 	- (S) Affichage en split screen sur une tablette (de préférence Nexus 9 - mode paysage)
 
 
-(Attention ! Certaines personnalités peuvent s'être glissées dans l'application ! Et elles peuvent toutes ne pas avoir les mêmes goûts !)
+(Attention ! Certaines personnalités et leurs préférences peuvent s'être glissées dans l'application !)
