@@ -36,8 +36,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class ListFragment extends Fragment {
 
+    /* BINDED VIEWS */
     @BindView(R.id.swipeRefreshLayout) SwipeRefreshLayout swipeRefreshLayout;
 
+    /* VARIABLES */
     private static RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
     private static RecyclerView recyclerView;
@@ -52,6 +54,7 @@ public class ListFragment extends Fragment {
     public static ListFragmentCallback callback;
     public static Boolean tabletMode = false;
 
+    /* ONCREATE / ONCREATEVIEW / ONVIEWCREATED */
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,6 +105,7 @@ public class ListFragment extends Fragment {
         });
     }
 
+    /* OVERRIDED METHODS */
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -152,7 +156,6 @@ public class ListFragment extends Fragment {
     }
 
     private void showVideos(ArrayList<Video> videos, int statusCode) {
-
         if (statusCode == 200) {
             MyVariables.videos = videos;
 

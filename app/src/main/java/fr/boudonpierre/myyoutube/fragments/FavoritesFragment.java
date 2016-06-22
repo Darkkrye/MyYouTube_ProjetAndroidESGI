@@ -30,8 +30,10 @@ import fr.boudonpierre.myyoutube.interfaces.ListFragmentCallback;
  */
 public class FavoritesFragment extends Fragment {
 
+    /* BINDED VIEWS */
     @BindView(R.id.swipeRefreshLayout) SwipeRefreshLayout swipeRefreshLayout;
 
+    /* VARIABLES */
     private static RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
     private static RecyclerView recyclerView;
@@ -41,10 +43,12 @@ public class FavoritesFragment extends Fragment {
     public static ListFragmentCallback callback;
     public static Boolean tabletMode = false;
 
+    /* CONSTRUCTOR */
     public static Fragment newInstance() {
         return new FavoritesFragment();
     }
 
+    /* ONCREATE / ONCREATEVIEW / ONVIEWCREATED /  */
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,6 +91,7 @@ public class FavoritesFragment extends Fragment {
         });
     }
 
+    /* OVERRIDED METHODS */
     @Override
     public void onResume() {
         super.onResume();
@@ -112,8 +117,6 @@ public class FavoritesFragment extends Fragment {
             callback = (ListFragmentCallback) context;
         }
     }
-
-    /* PERSONNAL METHODS */
 
     /* PRIVATE STATIC CLASSES */
     private static class MyOnClickListenerForMain implements View.OnClickListener {

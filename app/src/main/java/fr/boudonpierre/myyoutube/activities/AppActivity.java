@@ -37,7 +37,7 @@ import io.fabric.sdk.android.Fabric;
 
 public class AppActivity extends AppCompatActivity implements ListFragmentCallback {
 
-    /* Binded Views */
+    /* BINDED VIEWS */
     @BindView(R.id.drawer) DrawerLayout drawerLayout;
     @BindView(R.id.toolbar) Toolbar toolbar;
 
@@ -49,9 +49,10 @@ public class AppActivity extends AppCompatActivity implements ListFragmentCallba
     @BindView(R.id.username) TextView tvusername;
     @BindView(R.id.email) TextView tvemail;
 
-    /* Variables */
+    /* VARIABLES */
     ActionBarDrawerToggle drawerToggle;
 
+    /* ONCREATE */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -148,11 +149,11 @@ public class AppActivity extends AppCompatActivity implements ListFragmentCallba
     @OnClick(R.id.headerLayout)
     public void onHeaderLayoutDrawerClick() {
         // Change current user and save it
-        if (MyVariables.currentUser == MyVariables.usernames.length - 1) {
+        if (MyVariables.currentUser == MyVariables.usernames.length - 1)
             MyVariables.currentUser = 0;
-        } else {
+        else
             MyVariables.currentUser += 1;
-        }
+
         MyVariables.saveCurrentUser(getApplicationContext());
 
         // Update UI
@@ -184,7 +185,7 @@ public class AppActivity extends AppCompatActivity implements ListFragmentCallba
                 .commit();
     }
 
-
+    /* FRAGMENT CALLBACKS */
     @Override
     public void onVideoClicked() {
         if (findViewById(R.id.detailsContentLayout) != null) {

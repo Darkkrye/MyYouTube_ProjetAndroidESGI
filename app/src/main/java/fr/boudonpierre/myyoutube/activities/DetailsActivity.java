@@ -23,7 +23,7 @@ import fr.boudonpierre.myyoutube.classes.Video;
 
 public class DetailsActivity extends AppCompatActivity {
 
-    /* Binded View */
+    /* BINDED VIEWS */
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.detailsImage) ImageView detailsImage;
     @BindView(R.id.videoName) TextView videoName;
@@ -35,7 +35,7 @@ public class DetailsActivity extends AppCompatActivity {
     @BindView(R.id.imageStar) ImageView imageStar;
     @BindView(R.id.textStar) TextView textStar;
 
-    /* Variables */
+    /* VARIABLES */
     Video video = MyVariables.currentVideo;
 
     /* ONCREATE */
@@ -44,7 +44,7 @@ public class DetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
 
-        /* Bind View */
+        /* Bind Views */
         ButterKnife.bind(this);
 
         /* -- Navigation Drawer -- */
@@ -56,7 +56,7 @@ public class DetailsActivity extends AppCompatActivity {
         getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         int width = displaymetrics.widthPixels;
 
-        /* Fill with datas */
+        /* Fill with data */
         Picasso.with(this).load(this.video.getImageUrl()).resize(width, 1000).into(this.detailsImage);
         this.videoName.setText(this.video.getName());
         this.videoDescription.setText(this.video.getDescription());

@@ -37,14 +37,11 @@ public class MyVariables {
     /* SAVE & RETRIEVE METHODS */
     public static void saveStarredVideos(Context context) {
         // Save array of starred videos
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.Editor editor = sharedPrefs.edit();
         Gson gson = new Gson();
-
         String json = gson.toJson(MyVariables.starredVideos);
 
-        editor.putString(MyVariables.SPTAG, json);
-        editor.commit();
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+        sharedPrefs.edit().putString(MyVariables.SPTAG, json).commit();
     }
 
     public static void retrieveStarredVideos(Context context) {
@@ -64,10 +61,8 @@ public class MyVariables {
     public static void saveCurrentUser(Context context) {
         // Save current user in header
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.Editor editor = sharedPrefs.edit();
+        sharedPrefs.edit().putInt("currentUser", MyVariables.currentUser).commit();
 
-        editor.putInt("currentUser", MyVariables.currentUser);
-        editor.commit();
     }
 
     public static void retrieveCurrentUser(Context context) {

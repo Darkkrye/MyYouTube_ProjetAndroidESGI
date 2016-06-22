@@ -72,8 +72,6 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
         textViewName.setText(videos.get(listPosition).getName());
         textViewVersion.setText(videos.get(listPosition).getDescription());
         Picasso.with(holder.itemView.getContext()).load(videos.get(listPosition).getImageUrl()).resize(475, 325).into(imageView);
-
-        //animate(holder); // Test Animation (can be uncommented but result is not as handsome
     }
 
     @Override
@@ -114,7 +112,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
         // Save the modified array
         MyVariables.saveStarredVideos(context);
 
-        // Check if the starred videos array is empty to show message and change to MainActivity
+        // Check if the starred videos array is empty to show message and change to AppActivity
         if (MyVariables.starredVideos == null || MyVariables.starredVideos.isEmpty()) {
             Toast.makeText(context, "Plus aucun favoris !", Toast.LENGTH_SHORT).show();
 
@@ -140,12 +138,4 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
             this.imageViewIcon = (ImageView) itemView.findViewById(R.id.imageView);
         }
     }
-
-
-    /* PERSONNAL METHODS */
-    // Test Animation (can be uncommented but result is not as handsome
-    /*public void animate(RecyclerView.ViewHolder viewHolder) {
-        final Animation animAnticipateOvershoot = AnimationUtils.loadAnimation(context, R.anim.bounce_interpolator);
-        viewHolder.itemView.setAnimation(animAnticipateOvershoot);
-    }*/
 }

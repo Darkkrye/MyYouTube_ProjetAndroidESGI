@@ -28,7 +28,7 @@ import fr.boudonpierre.myyoutube.classes.Video;
  */
 public class DetailsFragment extends Fragment {
 
-    /* Binded View */
+    /* BINDED VIEWS */
     @BindView(R.id.detailsImage) ImageView detailsImage;
     @BindView(R.id.videoName) TextView videoName;
     @BindView(R.id.videoDescription) TextView videoDescription;
@@ -39,13 +39,15 @@ public class DetailsFragment extends Fragment {
     @BindView(R.id.imageStar) ImageView imageStar;
     @BindView(R.id.textStar) TextView textStar;
 
-    /* Variables */
+    /* VARIABLES */
     Video video = MyVariables.currentVideo;
 
+    /* CONSTRUCTOR */
     public static Fragment newInstance() {
         return new DetailsFragment();
     }
 
+    /* ONCREATE / ONCREATEVIEW / ONVIEWCREATED */
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,7 +69,7 @@ public class DetailsFragment extends Fragment {
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         int width = displaymetrics.widthPixels;
 
-        /* Fill with datas */
+        /* Fill with data */
         Picasso.with(getContext()).load(this.video.getImageUrl()).resize(width, 1000).into(this.detailsImage);
         this.videoName.setText(this.video.getName());
         this.videoDescription.setText(this.video.getDescription());
