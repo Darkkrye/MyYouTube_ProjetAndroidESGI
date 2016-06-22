@@ -60,8 +60,8 @@ public class AppActivity extends AppCompatActivity implements ListFragmentCallba
         setContentView(R.layout.activity_app);
 
         /* Reload Shared Preferences */
-        MyVariables.retrieveStarredVideos(this);
         MyVariables.retrieveCurrentUser(this);
+        MyVariables.retrieveStarredVideos(this);
 
         /* -- Get Binded Views -- */
         ButterKnife.bind(this);
@@ -148,6 +148,8 @@ public class AppActivity extends AppCompatActivity implements ListFragmentCallba
     /* -- Butterknife - OnClickListeners -- */
     @OnClick(R.id.headerLayout)
     public void onHeaderLayoutDrawerClick() {
+        MyVariables.saveStarredVideos(getApplicationContext());
+
         // Change current user and save it
         if (MyVariables.currentUser == MyVariables.usernames.length - 1)
             MyVariables.currentUser = 0;
@@ -155,6 +157,7 @@ public class AppActivity extends AppCompatActivity implements ListFragmentCallba
             MyVariables.currentUser += 1;
 
         MyVariables.saveCurrentUser(getApplicationContext());
+        MyVariables.retrieveStarredVideos(getApplicationContext());
 
         // Update UI
         updateNavigationDrawerUI();

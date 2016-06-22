@@ -103,6 +103,7 @@ public class DetailsFragment extends Fragment {
         // Set / Unset favorite video
         if (!isAlreadyStarred) {
             MyVariables.starredVideos.add(video);
+            MyVariables.saveCurrentUser(getContext());
             MyVariables.saveStarredVideos(getContext());
 
             Toast.makeText(getContext(), "Ajouté aux favoris", Toast.LENGTH_SHORT).show();
@@ -111,6 +112,7 @@ public class DetailsFragment extends Fragment {
             textStar.setText("Supprimer des favoris");
         } else {
             MyVariables.starredVideos.remove(index);
+            MyVariables.saveCurrentUser(getContext());
             MyVariables.saveStarredVideos(getContext());
 
             Toast.makeText(getContext(), "Favoris supprimé", Toast.LENGTH_SHORT).show();

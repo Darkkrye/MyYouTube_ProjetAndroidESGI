@@ -41,14 +41,14 @@ public class MyVariables {
         String json = gson.toJson(MyVariables.starredVideos);
 
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
-        sharedPrefs.edit().putString(MyVariables.SPTAG, json).commit();
+        sharedPrefs.edit().putString(MyVariables.SPTAG + currentUser, json).commit();
     }
 
     public static void retrieveStarredVideos(Context context) {
         // Retrieve array of starred videos
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
         Gson gson = new Gson();
-        String json = sharedPrefs.getString(MyVariables.SPTAG, null);
+        String json = sharedPrefs.getString(MyVariables.SPTAG + currentUser, null);
         Type type = new TypeToken<ArrayList<Video>>() {}.getType();
         MyVariables.starredVideos = gson.fromJson(json, type);
 
@@ -62,7 +62,6 @@ public class MyVariables {
         // Save current user in header
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
         sharedPrefs.edit().putInt("currentUser", MyVariables.currentUser).commit();
-
     }
 
     public static void retrieveCurrentUser(Context context) {
