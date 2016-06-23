@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="no_more_favorites">これ以上のお気に入りはありません</string>
+    <string name="no_favorites">いいえお気に入りは追加されていません</string>
+    <string name="no_videos">見つかりませビデオはありません</string>
+
+    <string name="add_favorites">お気に入りに追加</string>
+    <string name="added_favorites">お気に入りに追加しました</string>
+    <string name="delete_favorites">お気に入りから削除</string>
+    <string name="deleted_favorites">ブックマークから削除</string>
+
+    <string name="something_wrong">何かが間違っていました</string>
+    <string name="connection_error">何かが間違っていました。インターネット接続を確認してください</string>
+    <string name="error_code">エラーコード</string>
+
+    <string name="watch_video">このビデオをチェックアウト</string>
+    <string name="watch_video_youtube">YouTubeでこの動画を見ます</string>
+    <string name="share_video">この動画を共有します</string>
+    <string name="share_video_via">経由でこの動画を共有します</string>
+
+    <string name="home">Home</string>
+    <string name="favorites">お気に入り</string>
+</resources>

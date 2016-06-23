@@ -1,7 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">MyYouTube</string>
-    <string name="lipsum" translatable="false">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec eu auctor est. Vestibulum ipsum ipsum, laoreet ornare justo in, blandit faucibus tellus. Sed ac risus volutpat, posuere augue sed, fermentum lectus.</string>
-
     <string name="no_more_favorites">No more favorites !</string>
     <string name="no_favorites">No favorites added</string>
     <string name="no_videos">No video found !</string>

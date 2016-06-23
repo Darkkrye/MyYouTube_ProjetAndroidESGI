@@ -24,6 +24,13 @@ Cette application a été développée par Pierre BOUDON et Nicolas KERVOERN.
 - (S) Ajout d'un système de bêta test.
 - (S) Transformation des Activités en Fragment : 
 	- (S) Affichage en split screen sur une tablette (de préférence Nexus 9 - mode paysage)
+- (S) L'application est disponible en 6 langues : 
+	- Le Français,
+	- L'Anglais,
+	- L'Espagnol,
+	- L'Allemand,
+	- Le Japonais,
+	- Le Finnois.
 
 
 (Attention ! Certaines personnalités et leurs préférences peuvent s'être glissées dans l'application !)

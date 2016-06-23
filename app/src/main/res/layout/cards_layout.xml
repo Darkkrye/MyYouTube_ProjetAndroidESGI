@@ -49,21 +49,21 @@
                 >
 
                 <TextView
-                    android:id="@+id/textViewName"
+                    android:id="@+id/tvTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Android Name"
+                    android:text="Title"
                     android:textSize="20sp"
                     android:textStyle="bold"/>
 
                 <TextView
-                    android:id="@+id/textViewVersion"
+                    android:id="@+id/tvDescription"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:minLines="1"
                     android:maxLines="3"
                     android:ellipsize="end"
-                    android:text="Android Version"
+                    android:text="Description"
                     android:textAppearance="?android:attr/textAppearanceMedium"/>
 
             </LinearLayout>

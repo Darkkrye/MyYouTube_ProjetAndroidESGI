@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="no_more_favorites">Plus aucun favoris !</string>
+    <string name="no_favorites">Aucun favoris n\'a été ajouté</string>
+    <string name="no_videos">Aucune vidéo trouvée !</string>
+
+    <string name="add_favorites">Ajouter aux favoris</string>
+    <string name="added_favorites">Ajouté aux favoris</string>
+    <string name="delete_favorites">Supprimer des favoris</string>
+    <string name="deleted_favorites">Favoris supprimé</string>
+
+    <string name="something_wrong">Une erreur est survenue</string>
+    <string name="connection_error">Un problème est survenu. Vérifiez votre connexion internet</string>
+    <string name="error_code">Code erreur : </string>
+
+    <string name="watch_video">Regardez cette video : </string>
+    <string name="watch_video_youtube">Voir la video sur YouTube</string>
+    <string name="share_video">Partagez cette vidéo</string>
+    <string name="share_video_via">Partagez cette vidéo via</string>
+
+    <string name="home">Home</string>
+    <string name="favorites">Favoris</string>
+</resources>

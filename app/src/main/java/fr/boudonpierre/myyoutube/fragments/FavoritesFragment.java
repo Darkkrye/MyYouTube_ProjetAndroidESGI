@@ -98,7 +98,7 @@ public class FavoritesFragment extends Fragment {
 
         // Load the reloaded and good one starredVideo array
         if (MyVariables.starredVideos == null || MyVariables.starredVideos.isEmpty()) {
-            Toast.makeText(getContext(), "Aucun favoris n'a été ajouté", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.no_favorites, Toast.LENGTH_SHORT).show();
         }
 
         adapter = new CustomAdapter(MyVariables.starredVideos, getContext());

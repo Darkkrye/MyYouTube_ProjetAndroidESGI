@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="no_more_favorites">Ei enää suosikit !</string>
+    <string name="no_favorites">Ei suosikkeja ole lisätty</string>
+    <string name="no_videos">Videoita ei löytynyt !</string>
+
+    <string name="add_favorites">Lisää suosikkeihin</string>
+    <string name="added_favorites">Lisätty suosikkeihin</string>
+    <string name="delete_favorites">Poista suosikeista</string>
+    <string name="deleted_favorites">Poistettu suosikeista</string>
+
+    <string name="something_wrong">Tapahtui virhe</string>
+    <string name="connection_error">Ongelma ilmeni. Ole hyvä, tarkista internetyhteys</string>
+    <string name="error_code">Virhekoodi : </string>
+
+    <string name="watch_video">Katso tämä video : </string>
+    <string name="watch_video_youtube">Katso tämä video YouTubessa</string>
+    <string name="share_video">Jaa tämä video</string>
+    <string name="share_video_via">Jaa tämä video kautta</string>
+
+    <string name="home">Home</string>
+    <string name="favorites">Suosikit</string>
+</resources>

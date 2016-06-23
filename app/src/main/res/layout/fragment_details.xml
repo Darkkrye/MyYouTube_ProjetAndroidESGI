@@ -38,7 +38,7 @@
                         android:layout_height="wrap_content"
                         android:paddingLeft="10dp"
                         android:paddingRight="10dp"
-                        android:text="Lorem"
+                        android:text="Title"
                         android:textSize="30sp"
                         android:background="#CDFFFFFF"
                         android:layout_alignParentLeft="true"
@@ -94,7 +94,7 @@
                             android:id="@+id/textStar"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Ajouter aux favoris"
+                            android:text="@string/add_favorites"
                             android:layout_gravity="center"/>
 
                     </LinearLayout>
@@ -115,7 +115,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Voir la video sur YouTube"
+                            android:text="@string/watch_video_youtube"
                             android:layout_gravity="center"/>
 
                     </LinearLayout>

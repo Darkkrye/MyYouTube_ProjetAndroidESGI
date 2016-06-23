@@ -143,7 +143,7 @@ public class ListFragment extends Fragment {
                 if (videos != null)
                     showVideos(videos, statusCode);
                 else
-                    showError("There's no videos !");
+                    showError(getResources().getString(R.string.no_videos));
 
                 swipeRefreshLayout.setRefreshing(false);
             }
@@ -151,7 +151,7 @@ public class ListFragment extends Fragment {
             @Override
             public void onFailure(Call<ArrayList<Video>> call, Throwable t) {
                 showError(String.valueOf(t));
-                showError("Un problème est survenu. Vérifiez votre connexion internet");
+                showError(getResources().getString(R.string.connection_error));
             }
         });
     }
@@ -163,7 +163,7 @@ public class ListFragment extends Fragment {
             adapter = new CustomAdapter(videos, getContext());
             recyclerView.setAdapter(adapter);
         } else
-            Toast.makeText(getContext(), "Code erreur : " + String.valueOf(statusCode), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.error_code + String.valueOf(statusCode), Toast.LENGTH_SHORT).show();
     }
 
     private void showError(String message) {

@@ -65,8 +65,8 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
     public void onBindViewHolder(final MyViewHolder holder, final int listPosition) {
 
         // Fill with data
-        TextView textViewName = holder.textViewName;
-        TextView textViewVersion = holder.textViewVersion;
+        TextView textViewName = holder.tvTitle;
+        TextView textViewVersion = holder.tvDescription;
         ImageView imageView = holder.imageViewIcon;
 
         textViewName.setText(videos.get(listPosition).getName());
@@ -114,7 +114,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
 
         // Check if the starred videos array is empty to show message and change to AppActivity
         if (MyVariables.starredVideos == null || MyVariables.starredVideos.isEmpty()) {
-            Toast.makeText(context, "Plus aucun favoris !", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, R.string.no_more_favorites, Toast.LENGTH_SHORT).show();
 
             Intent intent = new Intent(context, AppActivity.class);
             context.startActivity(intent);
@@ -126,15 +126,15 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
     public static class MyViewHolder extends RecyclerView.ViewHolder {
 
         /* VARIABLES */
-        TextView textViewName;
-        TextView textViewVersion;
+        TextView tvTitle;
+        TextView tvDescription;
         ImageView imageViewIcon;
 
         /* CONSTRUCTOR */
         public MyViewHolder(View itemView) {
             super(itemView);
-            this.textViewName = (TextView) itemView.findViewById(R.id.textViewName);
-            this.textViewVersion = (TextView) itemView.findViewById(R.id.textViewVersion);
+            this.tvTitle = (TextView) itemView.findViewById(R.id.tvTitle);
+            this.tvDescription = (TextView) itemView.findViewById(R.id.tvDescription);
             this.imageViewIcon = (ImageView) itemView.findViewById(R.id.imageView);
         }
     }
