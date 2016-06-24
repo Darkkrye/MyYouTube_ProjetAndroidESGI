@@ -24,6 +24,8 @@ import android.util.DisplayMetrics;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -142,6 +144,14 @@ public class DetailsActivity extends AppCompatActivity {
         // Set colors
         collapsingToolbarLayout.setContentScrimColor(palette.getMutedColor(primary));
         collapsingToolbarLayout.setStatusBarScrimColor(palette.getDarkMutedColor(primaryDark));
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            int color = palette.getMutedColor(primary);
+            color = (color & 0x00FFFFFF) | 0x90000000;
+            window.setStatusBarColor(color);
+        }
 
         // Update UI
         updateBackground(shareFAB, palette);

@@ -16,6 +16,8 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import fr.boudonpierre.myyoutube.activities.AppActivity;
 import fr.boudonpierre.myyoutube.classes.MyVariables;
 import fr.boudonpierre.myyoutube.R;
@@ -65,13 +67,9 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
     public void onBindViewHolder(final MyViewHolder holder, final int listPosition) {
 
         // Fill with data
-        TextView textViewName = holder.tvTitle;
-        TextView textViewVersion = holder.tvDescription;
-        ImageView imageView = holder.imageViewIcon;
-
-        textViewName.setText(videos.get(listPosition).getName());
-        textViewVersion.setText(videos.get(listPosition).getDescription());
-        Picasso.with(holder.itemView.getContext()).load(videos.get(listPosition).getImageUrl()).resize(475, 325).into(imageView);
+        holder.tvTitle.setText(videos.get(listPosition).getName());
+        holder.tvDescription.setText(videos.get(listPosition).getDescription());
+        Picasso.with(holder.itemView.getContext()).load(videos.get(listPosition).getImageUrl()).resize(475, 325).into(holder.imageViewIcon);
     }
 
     @Override
@@ -125,17 +123,17 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
     /* PUBLIC STATIC CLASSES */
     public static class MyViewHolder extends RecyclerView.ViewHolder {
 
-        /* VARIABLES */
-        TextView tvTitle;
-        TextView tvDescription;
-        ImageView imageViewIcon;
+        /* BINDED VIEWS */
+        @BindView(R.id.tvTitle) TextView tvTitle;
+        @BindView(R.id.tvDescription) TextView tvDescription;
+        @BindView(R.id.imageView) ImageView imageViewIcon;
 
         /* CONSTRUCTOR */
         public MyViewHolder(View itemView) {
             super(itemView);
-            this.tvTitle = (TextView) itemView.findViewById(R.id.tvTitle);
-            this.tvDescription = (TextView) itemView.findViewById(R.id.tvDescription);
-            this.imageViewIcon = (ImageView) itemView.findViewById(R.id.imageView);
+
+            /* Bind Views */
+            ButterKnife.bind(this, itemView);
         }
     }
 }

@@ -13,4 +13,6 @@
 
     <color name="color_white">#FFFFFF</color>
     <color name="dark_white">#77FFFFFF</color>
+
+    <color name="darker_color">#55000000</color>
 </resources>

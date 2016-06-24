@@ -138,7 +138,7 @@ public class FavoritesFragment extends Fragment {
             if(tabletMode && callback != null){
                 callback.onVideoClicked();
             } else {
-                Intent i = new Intent(v.getContext(), DetailsActivity.class);
+                Intent i = new Intent(context, DetailsActivity.class);
                 v.getContext().startActivity(i);
             }
         }
