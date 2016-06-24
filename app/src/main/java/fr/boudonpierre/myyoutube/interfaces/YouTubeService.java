@@ -7,7 +7,7 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 
 /**
- * Created by Pierre BOUDON on 06/06/2016.
+ * Created by Nicolas KERVOERN.
  */
 public interface YouTubeService {
 

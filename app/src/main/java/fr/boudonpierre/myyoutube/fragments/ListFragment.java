@@ -33,7 +33,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
- * Created by OpenFieldMacMini on 21/06/2016.
+ * Created by Pierre BOUDON.
  */
 public class ListFragment extends Fragment {
 

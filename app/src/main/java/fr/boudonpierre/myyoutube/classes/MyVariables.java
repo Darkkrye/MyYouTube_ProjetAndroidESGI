@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import fr.boudonpierre.myyoutube.R;
 
 /**
- * Created by Pierre BOUDON on 08/06/2016.
+ * Created by Pierre BOUDON.
  */
 public class MyVariables {
     /* TAG */

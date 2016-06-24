@@ -25,7 +25,7 @@ import fr.boudonpierre.myyoutube.fragments.ListFragment;
 import fr.boudonpierre.myyoutube.interfaces.ItemTouchHelperAdapter;
 
 /**
- * Created by Pierre BOUDON on 06/06/2016.
+ * Created by Pierre BOUDON.
  */
 public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHolder> implements ItemTouchHelperAdapter {
 

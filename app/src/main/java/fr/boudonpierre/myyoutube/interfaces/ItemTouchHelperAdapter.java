@@ -1,7 +1,7 @@
 package fr.boudonpierre.myyoutube.interfaces;
 
 /**
- * Created by Pierre BOUDON on 10/06/2016.
+ * Created by Pierre BOUDON.
  */
 public interface ItemTouchHelperAdapter {
 

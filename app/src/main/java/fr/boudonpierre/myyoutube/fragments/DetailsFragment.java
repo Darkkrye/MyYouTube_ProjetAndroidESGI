@@ -24,7 +24,7 @@ import fr.boudonpierre.myyoutube.classes.MyVariables;
 import fr.boudonpierre.myyoutube.classes.Video;
 
 /**
- * Created by OpenFieldMacMini on 21/06/2016.
+ * Created by Nicolas KERVOERN.
  */
 public class DetailsFragment extends Fragment {
 

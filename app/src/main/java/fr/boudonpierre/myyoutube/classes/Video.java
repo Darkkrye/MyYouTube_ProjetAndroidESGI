@@ -1,7 +1,7 @@
 package fr.boudonpierre.myyoutube.classes;
 
 /**
- * Created by Pierre BOUDON on 06/06/2016.
+ * Created by Nicolas KERVOERN.
  */
 public class Video {
 

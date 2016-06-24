@@ -35,6 +35,9 @@ import fr.boudonpierre.myyoutube.fragments.FavoritesFragment;
 import fr.boudonpierre.myyoutube.fragments.ListFragment;
 import io.fabric.sdk.android.Fabric;
 
+/**
+ * Created by Pierre BOUDON.
+ */
 public class AppActivity extends AppCompatActivity implements ListFragmentCallback {
 
     /* BINDED VIEWS */

@@ -26,7 +26,7 @@ import fr.boudonpierre.myyoutube.classes.MyVariables;
 import fr.boudonpierre.myyoutube.interfaces.ListFragmentCallback;
 
 /**
- * Created by OpenFieldMacMini on 21/06/2016.
+ * Created by Nicolas KERVOERN.
  */
 public class FavoritesFragment extends Fragment {
 

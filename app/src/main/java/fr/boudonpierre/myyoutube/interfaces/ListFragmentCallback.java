@@ -1,7 +1,7 @@
 package fr.boudonpierre.myyoutube.interfaces;
 
 /**
- * Created by OpenFieldMacMini on 21/06/2016.
+ * Created by Nicolas KERVOERN.
  */
 public interface ListFragmentCallback {
     /* METHODS TO OVERRIDE */

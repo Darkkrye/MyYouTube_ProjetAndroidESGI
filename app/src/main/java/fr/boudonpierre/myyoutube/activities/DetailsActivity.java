@@ -40,6 +40,9 @@ import fr.boudonpierre.myyoutube.R;
 import fr.boudonpierre.myyoutube.classes.Video;
 import fr.boudonpierre.myyoutube.fragments.DetailsFragment;
 
+/**
+ * Created by Pierre BOUDON.
+ */
 public class DetailsActivity extends AppCompatActivity {
 
     /* BINDED VIEWS */

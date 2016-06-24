@@ -1,13 +1,12 @@
 package fr.boudonpierre.myyoutube.widgets;
 
-/**
- * Created by OpenFieldMacMini on 22/06/2016.
- */
-
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
+/**
+ * Created by Pierre BOUDON.
+ */
 public class SquareImageView  extends ImageView {
 
     public SquareImageView(Context context) {
