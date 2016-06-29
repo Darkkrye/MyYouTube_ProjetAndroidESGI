@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:background="@color/grey_300">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="30">
+
+        <ImageView android:id="@+id/link"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:adjustViewBounds="true"/>
+
+        <TextView
+            android:id="@+id/tvWidget"
+            android:layout_alignBottom="@id/link"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:background="#CDFFFFFF"
+            android:textColor="@color/textColorPrimary"
+            android:textStyle="italic"
+            android:text="Aucun favoris pour l'instant"
+            android:textSize="15sp"/>
+
+    </RelativeLayout>
+
+    <LinearLayout android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="70"
+        android:orientation="horizontal"
+        android:layout_marginBottom="10dp" >
+
+        <Button android:id="@+id/previous"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="50"
+            android:text="Prec." />
+
+        <Button android:id="@+id/next"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_weight="50"
+            android:text="Suiv." />
+    </LinearLayout>
+
+</LinearLayout>

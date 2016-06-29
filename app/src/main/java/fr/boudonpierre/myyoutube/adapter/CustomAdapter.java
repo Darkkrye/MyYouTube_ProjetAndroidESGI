@@ -105,7 +105,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
     public void onItemDismiss(int position) {
         // Remove item from the array and apply the UI change
         MyVariables.starredVideos.remove(position);
-        notifyItemRemoved(position);
+        notifyItemRangeRemoved(position, MyVariables.starredVideos.size());
 
         // Save the modified array
         MyVariables.saveStarredVideos(context);

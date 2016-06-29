@@ -1,6 +1,8 @@
 package fr.boudonpierre.myyoutube.classes;
 
+import android.appwidget.AppWidgetManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
@@ -11,6 +13,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 import fr.boudonpierre.myyoutube.R;
+import fr.boudonpierre.myyoutube.widgets.FavoritesWidget;
 
 /**
  * Created by Pierre BOUDON.
@@ -42,6 +45,8 @@ public class MyVariables {
 
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
         sharedPrefs.edit().putString(MyVariables.SPTAG + currentUser, json).commit();
+
+        updateWidget(context);
     }
 
     public static void retrieveStarredVideos(Context context) {
@@ -68,5 +73,12 @@ public class MyVariables {
         // Retrieve current user in header
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
         MyVariables.currentUser = sharedPrefs.getInt("currentUser", 0);
+    }
+
+    public static void updateWidget(Context context) {
+        Intent intent = new Intent(context, FavoritesWidget.class);
+        intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, FavoritesWidget.appWidgetsIDs);
+        context.sendBroadcast(intent);
     }
 }

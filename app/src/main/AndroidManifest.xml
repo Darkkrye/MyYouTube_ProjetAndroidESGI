@@ -19,6 +19,19 @@
         </activity>
         <activity android:name=".activities.DetailsActivity" />
 
+        <receiver
+            android:name=".widgets.FavoritesWidget"
+            android:icon="@mipmap/ic_launcher">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="fr.boudonpierre.myyoutube.widgets.favoriteswidget.action.OPEN_FAV" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/appwidget_info" />
+        </receiver>
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="65d090ec2d4bd2a8a8a219adcb031492acac7cf0" />
