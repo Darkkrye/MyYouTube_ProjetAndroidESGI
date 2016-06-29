@@ -31,7 +31,7 @@ Cette application a été développée par Pierre BOUDON et Nicolas KERVOERN.
 	- L'Allemand,
 	- Le Japonais,
 	- Le Finnois;
-- (S) Un AppWidget permet de garder afficher sur le Home-Screen les favoris,
+- (S) Un AppWidget permet de garder affiché sur le Home-Screen les favoris,
 - (S) Un clic sur l'AppWidget permet de lancer le navigateur avec l'URL de la vidéo en question.
 
 
