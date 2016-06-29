@@ -49,18 +49,16 @@ public class FavoritesWidget extends AppWidgetProvider {
             // On récupère le RemoteViews qui correspond à l'AppWidget
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget);
 
-            RemoteViews updateViews = new RemoteViews(context.getPackageName(), R.layout.widget);
-            // Load image for all appWidgetIds.
             Picasso picasso = Picasso.with(context);
 
             // On met le bon texte dans le bouton
             if (MyVariables.starredVideos != null && MyVariables.starredVideos.size() > 0) {
                 views.setTextViewText(R.id.tvWidget, MyVariables.starredVideos.get(indice).getName());
-                picasso.load(MyVariables.starredVideos.get(indice).getImageUrl()).resize(1800, 1000).into(updateViews, R.id.link, appWidgetIds);
+                picasso.load(MyVariables.starredVideos.get(indice).getImageUrl()).resize(1800, 1000).into(views, R.id.link, appWidgetIds);
             }
             else {
                 views.setTextViewText(R.id.tvWidget, "Aucun favoris pour l'instant.");
-                picasso.load(R.drawable.widget_background).resize(1800, 1000).into(updateViews, R.id.link, appWidgetIds);
+                picasso.load(R.drawable.widget_background).resize(1800, 1000).into(views, R.id.link, appWidgetIds);
             }
 
             // La prochaine section est destinée au bouton qui permet de passer au favoris suivant
