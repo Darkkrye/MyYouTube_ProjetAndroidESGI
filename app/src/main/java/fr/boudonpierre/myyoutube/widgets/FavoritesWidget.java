@@ -14,7 +14,7 @@ import fr.boudonpierre.myyoutube.R;
 import fr.boudonpierre.myyoutube.classes.MyVariables;
 
 /**
- * Created by Pierre.
+ * Created by Pierre BOUDON.
  */
 public class FavoritesWidget extends AppWidgetProvider {
     // Intitulé de l'extra qui contient la direction du défilé
