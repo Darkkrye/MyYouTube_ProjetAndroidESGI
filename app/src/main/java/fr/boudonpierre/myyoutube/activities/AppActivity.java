@@ -23,11 +23,15 @@ import com.crashlytics.android.Crashlytics;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 import fr.boudonpierre.myyoutube.R;
+import fr.boudonpierre.myyoutube.classes.FavorisPreferences;
+import fr.boudonpierre.myyoutube.classes.Video;
 import fr.boudonpierre.myyoutube.interfaces.ListFragmentCallback;
 import fr.boudonpierre.myyoutube.classes.MyVariables;
 import fr.boudonpierre.myyoutube.fragments.DetailsFragment;
@@ -55,6 +59,9 @@ public class AppActivity extends AppCompatActivity implements ListFragmentCallba
     /* VARIABLES */
     ActionBarDrawerToggle drawerToggle;
 
+    public static int currentUser;
+    public static ArrayList<Video> starredVideos;
+
     /* ONCREATE */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,8 +70,8 @@ public class AppActivity extends AppCompatActivity implements ListFragmentCallba
         setContentView(R.layout.activity_app);
 
         /* Reload Shared Preferences */
-        MyVariables.retrieveCurrentUser(this);
-        MyVariables.retrieveStarredVideos(this);
+        currentUser = FavorisPreferences.retrieveCurrentUser(this);
+        starredVideos = FavorisPreferences.retrieveStarredVideos(this, currentUser);
 
         /* -- Get Binded Views -- */
         ButterKnife.bind(this);
@@ -82,7 +89,7 @@ public class AppActivity extends AppCompatActivity implements ListFragmentCallba
         this.updateNavigationDrawerUI();
 
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.contentLayout, ListFragment.newInstance(), "listFragment")
+                .replace(R.id.contentLayout, ListFragment.newInstance(currentUser), "listFragment")
                 .commit();
     }
 
@@ -114,15 +121,15 @@ public class AppActivity extends AppCompatActivity implements ListFragmentCallba
     /* PERSONAL METHODS */
     private void updateNavigationDrawerUI() {
         // Update textviews
-        tvusername.setText(MyVariables.usernames[MyVariables.currentUser]);
-        tvemail.setText(MyVariables.emails[MyVariables.currentUser]);
+        tvusername.setText(FavorisPreferences.usernames[currentUser]);
+        tvemail.setText(FavorisPreferences.emails[currentUser]);
 
         // Update profile picture
-        Picasso.with(getApplicationContext()).load(MyVariables.profileImages[MyVariables.currentUser]).into(profileImage);
+        Picasso.with(getApplicationContext()).load(FavorisPreferences.profileImages[currentUser]).into(profileImage);
 
         // Update Header background of the Navigation Drawer
         Picasso.with(getApplicationContext())
-                .load(MyVariables.backgroundImages[MyVariables.currentUser])
+                .load(FavorisPreferences.backgroundImages[currentUser])
                 .into(new Target() {
                     @Override
                     @TargetApi(16)
@@ -151,16 +158,17 @@ public class AppActivity extends AppCompatActivity implements ListFragmentCallba
     /* -- Butterknife - OnClickListeners -- */
     @OnClick(R.id.headerLayout)
     public void onHeaderLayoutDrawerClick() {
-        MyVariables.saveStarredVideos(getApplicationContext());
+        ArrayList<Video> currentStarredVideos = FavorisPreferences.retrieveStarredVideos(getApplicationContext(), currentUser);
+        FavorisPreferences.saveStarredVideos(getApplicationContext(), currentStarredVideos, currentUser);
 
         // Change current user and save it
-        if (MyVariables.currentUser == MyVariables.usernames.length - 1)
-            MyVariables.currentUser = 0;
+        if (currentUser == FavorisPreferences.usernames.length - 1)
+            currentUser = 0;
         else
-            MyVariables.currentUser += 1;
+            currentUser += 1;
 
-        MyVariables.saveCurrentUser(getApplicationContext());
-        MyVariables.retrieveStarredVideos(getApplicationContext());
+        FavorisPreferences.saveCurrentUser(getApplicationContext(), currentUser);
+        starredVideos = FavorisPreferences.retrieveStarredVideos(getApplicationContext(), currentUser);
 
         // Update UI
         updateNavigationDrawerUI();
@@ -174,7 +182,7 @@ public class AppActivity extends AppCompatActivity implements ListFragmentCallba
         // Close Navigation Drawer and change to Home
         drawerLayout.closeDrawer(Gravity.LEFT);
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.contentLayout, ListFragment.newInstance(), "listFragment")
+                .replace(R.id.contentLayout, ListFragment.newInstance(currentUser), "listFragment")
                 .commit();
     }
 
@@ -186,17 +194,17 @@ public class AppActivity extends AppCompatActivity implements ListFragmentCallba
         // Close Navigation Drawer and change to Favorites
         drawerLayout.closeDrawer(Gravity.LEFT);
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.contentLayout, FavoritesFragment.newInstance(), "favoritesListFragment")
+                .replace(R.id.contentLayout, FavoritesFragment.newInstance(currentUser), "favoritesListFragment")
                 .addToBackStack(null)
                 .commit();
     }
 
     /* FRAGMENT CALLBACKS */
     @Override
-    public void onVideoClicked() {
+    public void onVideoClicked(int theCurrentUser, Video theCurrentVideo, ArrayList<Video> theStarredVideos) {
         if (findViewById(R.id.detailsContentLayout) != null) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.detailsContentLayout, DetailsFragment.newInstance(), "detailsFragment")
+                    .replace(R.id.detailsContentLayout, DetailsFragment.newInstance(theCurrentUser, theCurrentVideo, theStarredVideos), "detailsFragment")
                     .addToBackStack(null)
                     .commit();
         }

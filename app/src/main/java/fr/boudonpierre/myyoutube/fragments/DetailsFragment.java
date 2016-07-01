@@ -16,10 +16,13 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import fr.boudonpierre.myyoutube.R;
+import fr.boudonpierre.myyoutube.classes.FavorisPreferences;
 import fr.boudonpierre.myyoutube.classes.MyVariables;
 import fr.boudonpierre.myyoutube.classes.Video;
 
@@ -40,17 +43,32 @@ public class DetailsFragment extends Fragment {
     @BindView(R.id.textStar) TextView textStar;
 
     /* VARIABLES */
-    Video video = MyVariables.currentVideo;
+    public static int currentUser;
+    public static Video video;
+    public static ArrayList<Video> starredVideos;
 
     /* CONSTRUCTOR */
-    public static Fragment newInstance() {
-        return new DetailsFragment();
+    public static Fragment newInstance(int currentUser, Video currentVideo, ArrayList<Video> starredVideos) {
+        DetailsFragment fragment = new DetailsFragment();
+
+        Bundle b = new Bundle();
+        b.putInt("currentUser", currentUser);
+        b.putParcelable("video", currentVideo);
+        b.putParcelableArrayList("starredVideos", starredVideos);
+
+        fragment.setArguments(b);
+
+        return fragment;
     }
 
     /* ONCREATE / ONCREATEVIEW / ONVIEWCREATED */
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        currentUser = getArguments().getInt("currentUser", 0);
+        video = getArguments().getParcelable("video");
+        starredVideos = FavorisPreferences.retrieveStarredVideos(getContext(), currentUser);
     }
 
     @Nullable
@@ -75,14 +93,21 @@ public class DetailsFragment extends Fragment {
         this.videoDescription.setText(this.video.getDescription());
 
         /* Set Favorite state */
-        for (int i = 0; i < MyVariables.starredVideos.size(); i++) {
-            if (this.video.getId().equals(MyVariables.starredVideos.get(i).getId())) {
+        for (int i = 0; i < starredVideos.size(); i++) {
+            if (this.video.getId().equals(starredVideos.get(i).getId())) {
                 this.imageStar.setImageResource(R.drawable.star);
                 this.textStar.setText("Supprimer des favoris");
 
                 break;
             }
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        starredVideos = FavorisPreferences.retrieveStarredVideos(getContext(), currentUser);
     }
 
     /* -- Butterknife - OnClickListeners -- */
@@ -92,8 +117,8 @@ public class DetailsFragment extends Fragment {
         Boolean isAlreadyStarred = false;
         int index = 0;
 
-        for (int i = 0; i < MyVariables.starredVideos.size(); i++) {
-            if (video.getId().equals(MyVariables.starredVideos.get(i).getId())) {
+        for (int i = 0; i < starredVideos.size(); i++) {
+            if (video.getId().equals(starredVideos.get(i).getId())) {
                 isAlreadyStarred = true;
                 index = i;
                 break;
@@ -102,18 +127,18 @@ public class DetailsFragment extends Fragment {
 
         // Set / Unset favorite video
         if (!isAlreadyStarred) {
-            MyVariables.starredVideos.add(video);
-            MyVariables.saveCurrentUser(getContext());
-            MyVariables.saveStarredVideos(getContext());
+            starredVideos.add(video);
+            FavorisPreferences.saveCurrentUser(getContext(), currentUser);
+            FavorisPreferences.saveStarredVideos(getContext(), starredVideos, currentUser);
 
             Toast.makeText(getContext(), "Ajouté aux favoris", Toast.LENGTH_SHORT).show();
 
             imageStar.setImageResource(R.drawable.star);
             textStar.setText("Supprimer des favoris");
         } else {
-            MyVariables.starredVideos.remove(index);
-            MyVariables.saveCurrentUser(getContext());
-            MyVariables.saveStarredVideos(getContext());
+            starredVideos.remove(index);
+            FavorisPreferences.saveCurrentUser(getContext(), currentUser);
+            FavorisPreferences.saveStarredVideos(getContext(), starredVideos, currentUser);
 
             Toast.makeText(getContext(), "Favoris supprimé", Toast.LENGTH_SHORT).show();
 

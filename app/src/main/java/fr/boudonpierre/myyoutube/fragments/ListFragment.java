@@ -22,6 +22,7 @@ import butterknife.ButterKnife;
 import fr.boudonpierre.myyoutube.R;
 import fr.boudonpierre.myyoutube.activities.DetailsActivity;
 import fr.boudonpierre.myyoutube.adapter.CustomAdapter;
+import fr.boudonpierre.myyoutube.classes.FavorisPreferences;
 import fr.boudonpierre.myyoutube.classes.MyVariables;
 import fr.boudonpierre.myyoutube.classes.Video;
 import fr.boudonpierre.myyoutube.interfaces.YouTubeService;
@@ -48,8 +49,18 @@ public class ListFragment extends Fragment {
     public static View.OnClickListener myOnClickListener;
     public static Boolean isReloaded = false;
 
-    public static Fragment newInstance() {
-        return new ListFragment();
+    public static int currentUser;
+    public static ArrayList<Video> starredVideos;
+    public static ArrayList<Video> listVideos;
+
+    public static Fragment newInstance(int currentUser) {
+        ListFragment fragment = new ListFragment();
+
+        Bundle args = new Bundle();
+        args.putInt("currentUser", currentUser);
+        fragment.setArguments(args);
+
+        return fragment;
     }
 
     public static ListFragmentCallback callback;
@@ -59,6 +70,8 @@ public class ListFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        currentUser = getArguments().getInt("currentUser", 0);
     }
 
     @Nullable
@@ -115,6 +128,13 @@ public class ListFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        starredVideos = FavorisPreferences.retrieveStarredVideos(getContext(), currentUser);
+    }
+
     /* PERSONNAL METHODS */
     private void fillRecycler(String endpoint, Boolean isForReload) {
         // Retrofit Builder
@@ -158,9 +178,9 @@ public class ListFragment extends Fragment {
 
     private void showVideos(ArrayList<Video> videos, int statusCode) {
         if (statusCode == 200) {
-            MyVariables.videos = videos;
+            listVideos = videos;
 
-            adapter = new CustomAdapter(videos, getContext());
+            adapter = new CustomAdapter(videos, getContext(), currentUser);
             recyclerView.setAdapter(adapter);
         } else
             Toast.makeText(getContext(), R.string.error_code + String.valueOf(statusCode), Toast.LENGTH_SHORT).show();
@@ -185,12 +205,15 @@ public class ListFragment extends Fragment {
         @Override
         public void onClick(View v) {
             // Set current video and change to DetailsActivity
-            MyVariables.currentVideo = MyVariables.videos.get(recyclerView.getChildAdapterPosition(v));
+            Video currentVideo = listVideos.get(recyclerView.getChildAdapterPosition(v));
 
             if(tabletMode && callback != null){
-                callback.onVideoClicked();
+                callback.onVideoClicked(currentUser, currentVideo, starredVideos);
             } else {
                 Intent i = new Intent(v.getContext(), DetailsActivity.class);
+                i.putExtra("currentUser", currentUser);
+                i.putExtra("currentVideo", currentVideo);
+                i.putParcelableArrayListExtra("starredVideos", starredVideos);
                 v.getContext().startActivity(i);
             }
         }

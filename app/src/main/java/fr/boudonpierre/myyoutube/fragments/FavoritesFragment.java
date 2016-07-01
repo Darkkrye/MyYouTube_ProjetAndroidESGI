@@ -15,11 +15,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import fr.boudonpierre.myyoutube.R;
 import fr.boudonpierre.myyoutube.activities.DetailsActivity;
 import fr.boudonpierre.myyoutube.adapter.CustomAdapter;
+import fr.boudonpierre.myyoutube.classes.FavorisPreferences;
+import fr.boudonpierre.myyoutube.classes.Video;
 import fr.boudonpierre.myyoutube.interfaces.ItemTouchHelperAdapter;
 import fr.boudonpierre.myyoutube.adapter.SimpleItemTouchHelperCallback;
 import fr.boudonpierre.myyoutube.classes.MyVariables;
@@ -43,15 +47,26 @@ public class FavoritesFragment extends Fragment {
     public static ListFragmentCallback callback;
     public static Boolean tabletMode = false;
 
+    public static int currentUser;
+    public static ArrayList<Video> starredVideos;
+
     /* CONSTRUCTOR */
-    public static Fragment newInstance() {
-        return new FavoritesFragment();
+    public static Fragment newInstance(int currentUser) {
+        FavoritesFragment fragment = new FavoritesFragment();
+
+        Bundle args = new Bundle();
+        args.putInt("currentUser", currentUser);
+        fragment.setArguments(args);
+
+        return fragment;
     }
 
     /* ONCREATE / ONCREATEVIEW / ONVIEWCREATED /  */
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        currentUser = getArguments().getInt("currentUser", 0);
     }
 
     @Nullable
@@ -64,6 +79,8 @@ public class FavoritesFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
+
+        starredVideos = FavorisPreferences.retrieveStarredVideos(getContext(), currentUser);
 
         if (getActivity().findViewById(R.id.detailsContentLayout) != null) {
             tabletMode = true;
@@ -83,7 +100,8 @@ public class FavoritesFragment extends Fragment {
         this.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                adapter = new CustomAdapter(MyVariables.starredVideos, getContext());
+                starredVideos = FavorisPreferences.retrieveStarredVideos(getContext(), currentUser);
+                adapter = new CustomAdapter(starredVideos, getContext(), currentUser);
                 recyclerView.setAdapter(adapter);
 
                 swipeRefreshLayout.setRefreshing(false);
@@ -96,12 +114,14 @@ public class FavoritesFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
+        starredVideos = FavorisPreferences.retrieveStarredVideos(getContext(), currentUser);
+
         // Load the reloaded and good one starredVideo array
-        if (MyVariables.starredVideos == null || MyVariables.starredVideos.isEmpty()) {
+        if (starredVideos == null || starredVideos.isEmpty()) {
             Toast.makeText(getContext(), R.string.no_favorites, Toast.LENGTH_SHORT).show();
         }
 
-        adapter = new CustomAdapter(MyVariables.starredVideos, getContext());
+        adapter = new CustomAdapter(starredVideos, getContext(), currentUser);
         recyclerView.setAdapter(adapter);
 
         /* -- RecyclerView - Item Move -- */
@@ -133,12 +153,15 @@ public class FavoritesFragment extends Fragment {
         @Override
         public void onClick(View v) {
             // Set current video and change to DetailsActivity
-            MyVariables.currentVideo = MyVariables.starredVideos.get(recyclerView.getChildAdapterPosition(v));
+            Video currentVideo = starredVideos.get(recyclerView.getChildAdapterPosition(v));
 
             if(tabletMode && callback != null){
-                callback.onVideoClicked();
+                callback.onVideoClicked(currentUser, currentVideo, starredVideos);
             } else {
-                Intent i = new Intent(context, DetailsActivity.class);
+                Intent i = new Intent(v.getContext(), DetailsActivity.class);
+                i.putExtra("currentUser", currentUser);
+                i.putExtra("currentVideo", currentVideo);
+                i.putParcelableArrayListExtra("starredVideos", starredVideos);
                 v.getContext().startActivity(i);
             }
         }

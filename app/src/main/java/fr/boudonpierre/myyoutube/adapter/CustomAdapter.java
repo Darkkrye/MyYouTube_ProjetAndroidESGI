@@ -19,6 +19,7 @@ import java.util.Collections;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import fr.boudonpierre.myyoutube.activities.AppActivity;
+import fr.boudonpierre.myyoutube.classes.FavorisPreferences;
 import fr.boudonpierre.myyoutube.classes.MyVariables;
 import fr.boudonpierre.myyoutube.R;
 import fr.boudonpierre.myyoutube.classes.Video;
@@ -33,13 +34,17 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
 
     /* VARIABLES */
     Context context;
-    private ArrayList<Video> videos;
+    private static ArrayList<Video> videos;
+    public static int currentUser;
+    public static ArrayList<Video> starredVideos;
 
 
     /* CONSTRUCTOR */
-    public CustomAdapter(ArrayList<Video> videos, Context context) {
+    public CustomAdapter(ArrayList<Video> videos, Context context, int currentUser) {
         this.videos = videos;
         this.context = context;
+        this.currentUser = currentUser;
+        this.starredVideos = FavorisPreferences.retrieveStarredVideos(context, currentUser);
     }
 
 
@@ -84,11 +89,11 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
         // Move item from a position to another one
         if (fromPosition < toPosition) {
             for (int i = fromPosition; i < toPosition; i++) {
-                Collections.swap(MyVariables.starredVideos, i, i + 1);
+                Collections.swap(starredVideos, i, i + 1);
             }
         } else {
             for (int i = fromPosition; i > toPosition; i--) {
-                Collections.swap(MyVariables.starredVideos, i, i - 1);
+                Collections.swap(starredVideos, i, i - 1);
             }
         }
 
@@ -96,7 +101,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
         notifyItemMoved(fromPosition, toPosition);
 
         // Save the modified array
-        MyVariables.saveStarredVideos(context);
+        FavorisPreferences.saveStarredVideos(context, starredVideos, currentUser);
 
         return true;
     }
@@ -104,14 +109,14 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
     @Override
     public void onItemDismiss(int position) {
         // Remove item from the array and apply the UI change
-        MyVariables.starredVideos.remove(position);
-        notifyItemRangeRemoved(position, MyVariables.starredVideos.size());
+        starredVideos.remove(position);
+        notifyItemRangeRemoved(position, starredVideos.size()-1);
 
         // Save the modified array
-        MyVariables.saveStarredVideos(context);
+        FavorisPreferences.saveStarredVideos(context, starredVideos, currentUser);
 
         // Check if the starred videos array is empty to show message and change to AppActivity
-        if (MyVariables.starredVideos == null || MyVariables.starredVideos.isEmpty()) {
+        if (starredVideos == null || starredVideos.isEmpty()) {
             Toast.makeText(context, R.string.no_more_favorites, Toast.LENGTH_SHORT).show();
 
             Intent intent = new Intent(context, AppActivity.class);

@@ -10,8 +10,12 @@ import android.widget.RemoteViews;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+
 import fr.boudonpierre.myyoutube.R;
+import fr.boudonpierre.myyoutube.classes.FavorisPreferences;
 import fr.boudonpierre.myyoutube.classes.MyVariables;
+import fr.boudonpierre.myyoutube.classes.Video;
 
 /**
  * Created by Pierre BOUDON.
@@ -37,10 +41,14 @@ public class FavoritesWidget extends AppWidgetProvider {
 
     public static int[] appWidgetsIDs;
 
+    public static int currentUser;
+    public static ArrayList<Video> starredVideos;
+
     @Override
     public void onUpdate(final Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         super.onUpdate(context, appWidgetManager, appWidgetIds);
-        MyVariables.retrieveStarredVideos(context);
+        currentUser = FavorisPreferences.retrieveCurrentUser(context);
+        starredVideos = FavorisPreferences.retrieveStarredVideos(context, currentUser);
         appWidgetsIDs = appWidgetIds;
 
         // Petite astuce : permet de garder la longueur du tableau sans accéder plusieurs fois à l'objet, d'où optimisation
@@ -52,9 +60,9 @@ public class FavoritesWidget extends AppWidgetProvider {
             Picasso picasso = Picasso.with(context);
 
             // On met le bon texte dans le bouton
-            if (MyVariables.starredVideos != null && MyVariables.starredVideos.size() > 0) {
-                views.setTextViewText(R.id.tvWidget, MyVariables.starredVideos.get(indice).getName());
-                picasso.load(MyVariables.starredVideos.get(indice).getImageUrl()).resize(1800, 1000).into(views, R.id.link, appWidgetIds);
+            if (starredVideos != null && starredVideos.size() > 0) {
+                views.setTextViewText(R.id.tvWidget, starredVideos.get(indice).getName());
+                picasso.load(starredVideos.get(indice).getImageUrl()).resize(1800, 1000).into(views, R.id.link, appWidgetIds);
             }
             else {
                 views.setTextViewText(R.id.tvWidget, "Aucun favoris pour l'instant.");
@@ -120,8 +128,8 @@ public class FavoritesWidget extends AppWidgetProvider {
             linkIntent.setAction(ACTION_OPEN_FAV);
             // Et l'adresse du site à visiter
             Uri uri = null;
-            if (MyVariables.starredVideos != null && MyVariables.starredVideos.size() > 0)
-                uri = Uri.parse(MyVariables.starredVideos.get(indice).getVideoUrl());
+            if (starredVideos != null && starredVideos.size() > 0)
+                uri = Uri.parse(starredVideos.get(indice).getVideoUrl());
             else
                 uri = Uri.parse("http://www.youtube.fr");
             linkIntent.setData(uri);
@@ -157,11 +165,11 @@ public class FavoritesWidget extends AppWidgetProvider {
                 String extra = intent.getStringExtra(EXTRA_DIRECTION);
                 // Et on calcule l'indice voulu par l'utilisateur
                 if (extra.equals(EXTRA_PREVIOUS)) {
-                    indice = (tmp - 1) % MyVariables.starredVideos.size();
+                    indice = (tmp - 1) % starredVideos.size();
                     if(indice < 0)
-                        indice += MyVariables.starredVideos.size();
+                        indice += starredVideos.size();
                 } else if(extra.equals(EXTRA_NEXT))
-                    indice = (tmp + 1) % MyVariables.starredVideos.size();
+                    indice = (tmp + 1) % starredVideos.size();
             }
         }
 

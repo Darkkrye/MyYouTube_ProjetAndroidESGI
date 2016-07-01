@@ -34,9 +34,12 @@ import android.widget.Toast;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import fr.boudonpierre.myyoutube.classes.FavorisPreferences;
 import fr.boudonpierre.myyoutube.classes.MyVariables;
 import fr.boudonpierre.myyoutube.R;
 import fr.boudonpierre.myyoutube.classes.Video;
@@ -65,7 +68,11 @@ public class DetailsActivity extends AppCompatActivity {
 
     /* VARIABLES */
     private CollapsingToolbarLayout collapsingToolbarLayout;
-    Video video = MyVariables.currentVideo;
+
+    Video video;
+
+    public static int currentUser;
+    public static ArrayList<Video> starredVideos;
 
     /* ONCREATE */
     @Override protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +81,10 @@ public class DetailsActivity extends AppCompatActivity {
 
         /* Bind Views */
         ButterKnife.bind(this);
+
+        currentUser = getIntent().getIntExtra("currentUser", 0);
+        video = getIntent().getParcelableExtra("currentVideo");
+        starredVideos = getIntent().getParcelableArrayListExtra("starredVideos");
 
         /* Transition */
         initActivityTransitions();
@@ -107,8 +118,8 @@ public class DetailsActivity extends AppCompatActivity {
         });
 
         /* Set Favorite state */
-        for (int i = 0; i < MyVariables.starredVideos.size(); i++) {
-            if (this.video.getId().equals(MyVariables.starredVideos.get(i).getId())) {
+        for (int i = 0; i < starredVideos.size(); i++) {
+            if (this.video.getId().equals(starredVideos.get(i).getId())) {
                 this.imageStar.setImageResource(R.drawable.star);
                 this.textStar.setText(R.string.delete_favorites);
 
@@ -177,8 +188,8 @@ public class DetailsActivity extends AppCompatActivity {
         Boolean isAlreadyStarred = false;
         int index = 0;
 
-        for (int i = 0; i < MyVariables.starredVideos.size(); i++) {
-            if (video.getId().equals(MyVariables.starredVideos.get(i).getId())) {
+        for (int i = 0; i < starredVideos.size(); i++) {
+            if (video.getId().equals(starredVideos.get(i).getId())) {
                 isAlreadyStarred = true;
                 index = i;
                 break;
@@ -187,16 +198,16 @@ public class DetailsActivity extends AppCompatActivity {
 
         // Set / Unset favorite video
         if (!isAlreadyStarred) {
-            MyVariables.starredVideos.add(video);
-            MyVariables.saveStarredVideos(getApplicationContext());
+            starredVideos.add(video);
+            FavorisPreferences.saveStarredVideos(getApplicationContext(), starredVideos, currentUser);
 
             Toast.makeText(getApplicationContext(), R.string.added_favorites, Toast.LENGTH_SHORT).show();
 
             imageStar.setImageResource(R.drawable.star);
             textStar.setText(R.string.delete_favorites);
         } else {
-            MyVariables.starredVideos.remove(index);
-            MyVariables.saveStarredVideos(getApplicationContext());
+            starredVideos.remove(index);
+            FavorisPreferences.saveStarredVideos(getApplicationContext(), starredVideos, currentUser);
 
             Toast.makeText(getApplicationContext(), R.string.deleted_favorites, Toast.LENGTH_SHORT).show();
 
