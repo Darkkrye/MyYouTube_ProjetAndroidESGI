@@ -66,7 +66,7 @@ public class FavoritesWidget extends AppWidgetProvider {
             }
             else {
                 views.setTextViewText(R.id.tvWidget, "Aucun favoris pour l'instant.");
-                picasso.load(R.drawable.widget_background).resize(1800, 1000).into(views, R.id.link, appWidgetIds);
+                picasso.load(R.drawable.my_youtube_widget).resize(1800, 1000).into(views, R.id.link, appWidgetIds);
             }
 
             // La prochaine section est destinée au bouton qui permet de passer au favoris suivant
