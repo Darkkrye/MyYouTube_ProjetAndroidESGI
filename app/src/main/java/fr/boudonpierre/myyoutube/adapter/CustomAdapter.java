@@ -20,7 +20,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import fr.boudonpierre.myyoutube.activities.AppActivity;
 import fr.boudonpierre.myyoutube.classes.FavorisPreferences;
-import fr.boudonpierre.myyoutube.classes.MyVariables;
 import fr.boudonpierre.myyoutube.R;
 import fr.boudonpierre.myyoutube.classes.Video;
 import fr.boudonpierre.myyoutube.fragments.FavoritesFragment;

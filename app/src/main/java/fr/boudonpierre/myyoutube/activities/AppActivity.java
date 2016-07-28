@@ -33,7 +33,6 @@ import fr.boudonpierre.myyoutube.R;
 import fr.boudonpierre.myyoutube.classes.FavorisPreferences;
 import fr.boudonpierre.myyoutube.classes.Video;
 import fr.boudonpierre.myyoutube.interfaces.ListFragmentCallback;
-import fr.boudonpierre.myyoutube.classes.MyVariables;
 import fr.boudonpierre.myyoutube.fragments.DetailsFragment;
 import fr.boudonpierre.myyoutube.fragments.FavoritesFragment;
 import fr.boudonpierre.myyoutube.fragments.ListFragment;

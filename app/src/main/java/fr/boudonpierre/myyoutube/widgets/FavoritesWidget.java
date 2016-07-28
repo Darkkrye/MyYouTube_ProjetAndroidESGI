@@ -14,7 +14,6 @@ import java.util.ArrayList;
 
 import fr.boudonpierre.myyoutube.R;
 import fr.boudonpierre.myyoutube.classes.FavorisPreferences;
-import fr.boudonpierre.myyoutube.classes.MyVariables;
 import fr.boudonpierre.myyoutube.classes.Video;
 
 /**

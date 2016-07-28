@@ -26,7 +26,6 @@ import fr.boudonpierre.myyoutube.classes.FavorisPreferences;
 import fr.boudonpierre.myyoutube.classes.Video;
 import fr.boudonpierre.myyoutube.interfaces.ItemTouchHelperAdapter;
 import fr.boudonpierre.myyoutube.adapter.SimpleItemTouchHelperCallback;
-import fr.boudonpierre.myyoutube.classes.MyVariables;
 import fr.boudonpierre.myyoutube.interfaces.ListFragmentCallback;
 
 /**
